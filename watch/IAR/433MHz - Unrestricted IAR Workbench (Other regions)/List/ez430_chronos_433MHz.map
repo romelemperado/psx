@@ -1,0 +1,2 @@
+Warning[w18]: Segment DATA16_AN (seg part no 2, symbol "TA0R" in module "stopwatch", address [350-351])  overlaps segment DATA16_AN (seg part no 4, symbol "_A_TA0R_L" in module "BRRX_Radio", address [350-351]) 
+Error[e89]: Too much object code produced (more than 0x2000 bytes) for this package

@@ -1,0 +1,13 @@
+C:\Documents and Settings\Leet\Desktop\CRL\CalorieLogger\CalorieLogger\bin\Debug\CalorieLogger.exe
+C:\Documents and Settings\Leet\Desktop\CRL\CalorieLogger\CalorieLogger\bin\Debug\CalorieLogger.pdb
+C:\Documents and Settings\Leet\Desktop\CRL\CalorieLogger\CalorieLogger\bin\Debug\eZ430_Chronos_Net.dll
+C:\Documents and Settings\Leet\Desktop\CRL\CalorieLogger\CalorieLogger\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Documents and Settings\Leet\Desktop\CRL\CalorieLogger\CalorieLogger\obj\x86\Debug\CalorieLogger.CRL.resources
+C:\Documents and Settings\Leet\Desktop\CRL\CalorieLogger\CalorieLogger\obj\x86\Debug\CalorieLogger.Properties.Resources.resources
+C:\Documents and Settings\Leet\Desktop\CRL\CalorieLogger\CalorieLogger\obj\x86\Debug\GenerateResource.read.1.tlog
+C:\Documents and Settings\Leet\Desktop\CRL\CalorieLogger\CalorieLogger\obj\x86\Debug\GenerateResource.write.1.tlog
+C:\Documents and Settings\Leet\Desktop\CRL\CalorieLogger\CalorieLogger\obj\x86\Debug\CalorieLogger.exe
+C:\Documents and Settings\Leet\Desktop\CRL\CalorieLogger\CalorieLogger\obj\x86\Debug\CalorieLogger.pdb
+C:\Documents and Settings\Leet\Desktop\CRL\CalorieLogger\CalorieLogger\obj\x86\Debug\CalorieLogger.CRL.en-PH.resources
+C:\Documents and Settings\Leet\Desktop\CRL\CalorieLogger\CalorieLogger\bin\Debug\en-PH\CalorieLogger.resources.dll
+C:\Documents and Settings\Leet\Desktop\CRL\CalorieLogger\CalorieLogger\obj\x86\Debug\en-PH\CalorieLogger.resources.dll

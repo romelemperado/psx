@@ -1,0 +1,5 @@
+C:\Documents and Settings\Leet\Desktop\Watch Back-up\DLOGGER\bin\Debug\eZ430_Chronos_Net.dll
+C:\Documents and Settings\Leet\Desktop\Watch Back-up\DLOGGER\bin\Debug\eZ430_Chronos_Net.pdb
+C:\Documents and Settings\Leet\Desktop\Watch Back-up\DLOGGER\obj\Debug\ResolveAssemblyReference.cache
+C:\Documents and Settings\Leet\Desktop\Watch Back-up\DLOGGER\obj\Debug\eZ430_Chronos_Net.dll
+C:\Documents and Settings\Leet\Desktop\Watch Back-up\DLOGGER\obj\Debug\eZ430_Chronos_Net.pdb

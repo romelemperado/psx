@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="eZ430_Chronos_Net">
+</Property><Property Name="Solution File" Value="C:\Documents and Settings\Leet\Desktop\Watch Back-up\DLOGGER\eZ430_Chronos_Net.sln">
+</Property><Property Name="Date" Value="Sunday, November 28, 2010">
+</Property><Property Name="Time" Value="3:39 AM">
+</Property></Properties><Event ErrorLevel="0" Project="" Source="eZ430_Chronos_Net.sln" Description="File successfully backed up as C:\Documents and Settings\Leet\Desktop\Watch Back-up\DLOGGER\Backup\eZ430_Chronos_Net.sln">
+</Event><Event ErrorLevel="0" Project="eZ430_Chronos_Net" Source="eZ430_Chronos_Net.csproj" Description="Project file successfully backed up as C:\Documents and Settings\Leet\Desktop\Watch Back-up\DLOGGER\Backup\eZ430_Chronos_Net.csproj">
+</Event><Event ErrorLevel="0" Project="eZ430_Chronos_Net" Source="Chronos.cs" Description="File successfully backed up as C:\Documents and Settings\Leet\Desktop\Watch Back-up\DLOGGER\Backup\Chronos.cs">
+</Event><Event ErrorLevel="0" Project="eZ430_Chronos_Net" Source="Constants.cs" Description="File successfully backed up as C:\Documents and Settings\Leet\Desktop\Watch Back-up\DLOGGER\Backup\Constants.cs">
+</Event><Event ErrorLevel="0" Project="eZ430_Chronos_Net" Source="Packet.cs" Description="File successfully backed up as C:\Documents and Settings\Leet\Desktop\Watch Back-up\DLOGGER\Backup\Packet.cs">
+</Event><Event ErrorLevel="0" Project="eZ430_Chronos_Net" Source="PortName.cs" Description="File successfully backed up as C:\Documents and Settings\Leet\Desktop\Watch Back-up\DLOGGER\Backup\PortName.cs">
+</Event><Event ErrorLevel="0" Project="eZ430_Chronos_Net" Source="Properties\AssemblyInfo.cs" Description="File successfully backed up as C:\Documents and Settings\Leet\Desktop\Watch Back-up\DLOGGER\Backup\Properties\AssemblyInfo.cs">
+</Event><Event ErrorLevel="0" Project="eZ430_Chronos_Net" Source="eZ430_Chronos_Net.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="eZ430_Chronos_Net" Source="eZ430_Chronos_Net.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="" Source="eZ430_Chronos_Net.sln" Description="Solution converted successfully">
+</Event><Event ErrorLevel="3" Project="" Source="eZ430_Chronos_Net.sln" Description="Converted">
+</Event><Event ErrorLevel="0" Project="eZ430_Chronos_Net" Source="eZ430_Chronos_Net.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event></UpgradeLog>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<Workspace>
+  <ConfigDictionary>
+    
+  <CurrentConfigs><Project>ez430_chronos/433MHz - Unrestricted IAR Workbench (Other regions)</Project></CurrentConfigs></ConfigDictionary>
+  <Desktop>
+    <Static>
+      <Workspace>
+        <ColumnWidths>
+          
+          
+          
+          
+        <Column0>261</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
+      </Workspace>
+      <Build>
+        
+        
+        
+        
+      <ColumnWidth0>20</ColumnWidth0><ColumnWidth1>909</ColumnWidth1><ColumnWidth2>242</ColumnWidth2><ColumnWidth3>60</ColumnWidth3></Build>
+    <Find-in-Files><ColumnWidth0>580</ColumnWidth0><ColumnWidth1>82</ColumnWidth1><ColumnWidth2>994</ColumnWidth2></Find-in-Files><TerminalIO/><Debug-Log><ColumnWidth0>18</ColumnWidth0><ColumnWidth1>1623</ColumnWidth1></Debug-Log><Disassembly><MixedMode>1</MixedMode><CodeCovShow>0</CodeCovShow></Disassembly></Static>
+    <Windows>
+      
+      
+    <Wnd0>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-5746-21755</Identity>
+            <TabName>Workspace</TabName>
+            <Factory>Workspace</Factory>
+            <Session>
+              
+            <NodeDict><ExpandedNode>ez430_chronos</ExpandedNode><ExpandedNode>ez430_chronos/Output</ExpandedNode></NodeDict></Session>
+          </Tab>
+        </Tabs>
+        
+      <SelectedTab>0</SelectedTab></Wnd0><Wnd2>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-8778-22722</Identity>
+            <TabName>Build</TabName>
+            <Factory>Build</Factory>
+            <Session/>
+          </Tab>
+        <Tab><Identity>TabID-13944-27333</Identity><TabName>Find in Files</TabName><Factory>Find-in-Files</Factory><Session/></Tab><Tab><Identity>TabID-13401-30618</Identity><TabName>Debug Log</TabName><Factory>Debug-Log</Factory><Session/></Tab></Tabs>
+        
+      <SelectedTab>0</SelectedTab></Wnd2></Windows>
+    <Editor>
+      
+      
+      
+      
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\..\..\IAR Systems\Embedded Workbench 6.0 Kickstart\430\inc\cc430x613x.h</Filename><XPos>0</XPos><YPos>3565</YPos><SelStart>219349</SelStart><SelEnd>219349</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\include\project.h</Filename><XPos>0</XPos><YPos>114</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd></Tab><ActiveTab>1</ActiveTab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Positions>
+      
+      
+      
+      
+      
+    <Top><Row0><Sizes><Toolbar-01cd84a0><key>iaridepm.enu1</key></Toolbar-01cd84a0></Sizes></Row0></Top><Left><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>232</Bottom><Right>335</Right><x>-2</x><y>-2</y><xscreen>226</xscreen><yscreen>142</yscreen><sizeHorzCX>266824</sizeHorzCX><sizeHorzCY>300847</sizeHorzCY><sizeVertCX>397875</sizeVertCX><sizeVertCY>495763</sizeVertCY></Rect></Wnd0></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd2><Rect><Top>-2</Top><Left>-2</Left><Bottom>195</Bottom><Right>849</Right><x>-2</x><y>-2</y><xscreen>851</xscreen><yscreen>197</yscreen><sizeHorzCX>1004723</sizeHorzCX><sizeHorzCY>417373</sizeHorzCY><sizeVertCX>266824</sizeVertCX><sizeVertCY>300847</sizeVertCY></Rect></Wnd2></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+  </Desktop>
+</Workspace>
+
+

@@ -1,0 +1,20 @@
+C:\Documents and Settings\Leet\Desktop\Watch Back-up\DLOGGER\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Documents and Settings\Leet\Desktop\Watch Back-up\DLOGGER\obj\x86\Debug\GenerateResource.read.1.tlog
+C:\Documents and Settings\Leet\Desktop\Watch Back-up\DLOGGER\obj\x86\Debug\Chronoswatch_Downloader.mainForm.resources
+C:\Documents and Settings\Leet\Desktop\Watch Back-up\DLOGGER\obj\x86\Debug\Chronoswatch_Downloader.Properties.Resources.resources
+C:\Documents and Settings\Leet\Desktop\Watch Back-up\DLOGGER\obj\x86\Debug\GenerateResource.write.1.tlog
+C:\Documents and Settings\Leet\Desktop\Watch Back-up\DLOGGER\bin\Debug\Chronoswatch Downloader.exe
+C:\Documents and Settings\Leet\Desktop\Watch Back-up\DLOGGER\bin\Debug\Chronoswatch Downloader.pdb
+C:\Documents and Settings\Leet\Desktop\Watch Back-up\DLOGGER\bin\Debug\ZedGraph.dll
+C:\Documents and Settings\Leet\Desktop\Watch Back-up\DLOGGER\obj\x86\Debug\Chronoswatch Downloader.exe
+C:\Documents and Settings\Leet\Desktop\Watch Back-up\DLOGGER\obj\x86\Debug\Chronoswatch Downloader.pdb
+C:\Documents and Settings\Leet\Desktop\Watch Back-up\Copy of DLOGGER\bin\Debug\Chronoswatch Downloader.exe
+C:\Documents and Settings\Leet\Desktop\Watch Back-up\Copy of DLOGGER\bin\Debug\Chronoswatch Downloader.pdb
+C:\Documents and Settings\Leet\Desktop\Watch Back-up\Copy of DLOGGER\bin\Debug\ZedGraph.dll
+C:\Documents and Settings\Leet\Desktop\Watch Back-up\Copy of DLOGGER\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Documents and Settings\Leet\Desktop\Watch Back-up\Copy of DLOGGER\obj\x86\Debug\Chronoswatch_Downloader.mainForm.resources
+C:\Documents and Settings\Leet\Desktop\Watch Back-up\Copy of DLOGGER\obj\x86\Debug\Chronoswatch_Downloader.Properties.Resources.resources
+C:\Documents and Settings\Leet\Desktop\Watch Back-up\Copy of DLOGGER\obj\x86\Debug\GenerateResource.read.1.tlog
+C:\Documents and Settings\Leet\Desktop\Watch Back-up\Copy of DLOGGER\obj\x86\Debug\GenerateResource.write.1.tlog
+C:\Documents and Settings\Leet\Desktop\Watch Back-up\Copy of DLOGGER\obj\x86\Debug\Chronoswatch Downloader.exe
+C:\Documents and Settings\Leet\Desktop\Watch Back-up\Copy of DLOGGER\obj\x86\Debug\Chronoswatch Downloader.pdb
