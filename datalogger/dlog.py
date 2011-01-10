@@ -4,6 +4,8 @@ import array
 import csv
 from time import sleep
 
+# comment1
+
 #Open a CSV file for writing
 accelcsvfile = csv.writer(open('dlog.csv', 'w'))
 
