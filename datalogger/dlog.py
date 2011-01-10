@@ -18,14 +18,14 @@ def HW_get_status(self):
   self.send_command("\xFF\x00\x04\x00")
   Data = self.read_data()
   if(len(Data)==4):
-      """
+    """
       0 = Idle
       1 = AP Stopped
       2 = AP Attempting Link
       3 = AP Linked
       4 = BR Stopped
       5 = BR Transmitting
-      """
+    """
     return ord(Data[3])
   else:
     return 0
