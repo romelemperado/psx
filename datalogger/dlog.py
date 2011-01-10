@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import serial
 import array
 import csv
@@ -7,17 +8,16 @@ from time import sleep
 accelcsvfile = csv.writer(open('dlog.csv', 'w'))
 
 def startAccessPoint():
-	
-	return array.array('B', [0xFF, 0x07, 0x03]).tostring()
+  return array.array('B', [0xFF, 0x07, 0x03]).tostring()
 
 def HW_reset(self):
-    #Reset Hardware
-	self.send_command("\xFF\x01\x03")
-	
+  # Reset Hardware
+  self.send_command("\xFF\x01\x03")
+
 def HW_get_status(self):
-	self.send_command("\xFF\x00\x04\x00")
-    Data = self.read_data()
-    if(len(Data)==4):
+  self.send_command("\xFF\x00\x04\x00")
+  Data = self.read_data()
+  if(len(Data)==4):
       """
       0 = Idle
       1 = AP Stopped
@@ -26,13 +26,10 @@ def HW_get_status(self):
       4 = BR Stopped
       5 = BR Transmitting
       """
-      return ord(Data[3])
-    else:
-      return 0
-	
-	
-	
-	
+    return ord(Data[3])
+  else:
+    return 0
+
 # Open COM port	
 ser = serial.Serial("/dev/ttyACM0",115200,timeout=1)
 
