@@ -1,20 +1,27 @@
 <?php
+/* SVN FILE: $Id$ */
 /**
  * AjaxHelperTest file
  *
+ * Long description for file
+ *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) Tests <http://book.cakephp.org/view/1196/Testing>
- * Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) Tests <https://trac.cakephp.org/wiki/Developement/TestSuite>
+ * Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
  *
  *  Licensed under The Open Group Test Suite License
  *  Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://book.cakephp.org/view/1196/Testing CakePHP(tm) Tests
+ * @filesource
+ * @copyright     Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * @link          https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
  * @package       cake
  * @subpackage    cake.tests.cases.libs.view.helpers
  * @since         CakePHP(tm) v 1.2.0.4206
+ * @version       $Revision$
+ * @modifiedby    $LastChangedBy$
+ * @lastmodified  $Date$
  * @license       http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
  */
 if (!defined('CAKEPHP_UNIT_TEST_EXECUTION')) {
@@ -158,12 +165,6 @@ class AjaxHelperTest extends CakeTestCase {
 		$view =& new View(new AjaxTestController());
 		ClassRegistry::addObject('view', $view);
 		ClassRegistry::addObject('PostAjaxTest', new PostAjaxTest());
-
-		$this->Ajax->Form->params = array(
-			'plugin' => null,
-			'action' => 'view',
-			'controller' => 'users'
-		);
 	}
 /**
  * tearDown method
@@ -548,13 +549,6 @@ class AjaxHelperTest extends CakeTestCase {
 		$this->assertPattern("/Event.observe\('link[0-9]+', [\w\d,'\(\)\s{}]+Ajax\.Request\([\w\d\s,'\(\){}:\/]+onComplete:function\(request, json\) {test}/", $result);
 		$this->assertNoPattern('/^<a[^<>]+complete="test"[^<>]*>Ajax Link<\/a>/', $result);
 		$this->assertNoPattern('/^<a\s+[^<>]*url="[^"]*"[^<>]*>/', $result);
-
-		$result = $this->Ajax->link(
-			'Ajax Link',
-			array('controller' => 'posts', 'action' => 'index', '?' => array('one' => '1', 'two' => '2')),
-			array('update' => 'myDiv', 'id' => 'myLink')
-		);
-		$this->assertPattern('#/posts\?one\=1\&two\=2#', $result);
 	}
 /**
  * testRemoteTimer method
@@ -789,7 +783,6 @@ class AjaxHelperTest extends CakeTestCase {
 		$expected = "if (confirm('Are you sure?')) { new Ajax.Updater('myDiv','/', {asynchronous:true, evalScripts:true, requestHeaders:['X-Update', 'myDiv']}); } else { event.returnValue = false; return false; }";
 		$this->assertEqual($result, $expected);
 	}
-
 /**
  * testDiv method
  *
@@ -797,7 +790,7 @@ class AjaxHelperTest extends CakeTestCase {
  * @return void
  */
 	function testDiv() {
-		ob_start();
+		ob_flush();
 		$oldXUpdate = env('HTTP_X_UPDATE');
 
 		$result = $this->Ajax->div('myDiv');
@@ -829,7 +822,6 @@ class AjaxHelperTest extends CakeTestCase {
  * @return void
  */
 	function testAfterRender() {
-		ob_start();
 		$oldXUpdate = env('HTTP_X_UPDATE');
 		$this->Ajax->Javascript =& new TestJavascriptHelper();
 
@@ -908,3 +900,4 @@ class AjaxHelperTest extends CakeTestCase {
 		$this->assertTags($result, $expected);
 	}
 }
+?>

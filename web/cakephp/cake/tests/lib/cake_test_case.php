@@ -1,20 +1,28 @@
 <?php
+/* SVN FILE: $Id$ */
+
 /**
  * CakeTestCase file
  *
+ * Long description for file
+ *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) Tests <http://book.cakephp.org/view/1196/Testing>
- * Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) Tests <https://trac.cakephp.org/wiki/Developement/TestSuite>
+ * Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
  *
  *  Licensed under The Open Group Test Suite License
  *  Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://book.cakephp.org/view/1196/Testing CakePHP(tm) Tests
+ * @filesource
+ * @copyright     Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * @link          https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
  * @package       cake
  * @subpackage    cake.cake.tests.libs
  * @since         CakePHP(tm) v 1.2.0.4667
+ * @version       $Revision$
+ * @modifiedby    $LastChangedBy$
+ * @lastmodified  $Date$
  * @license       http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
  */
 if (!class_exists('dispatcher')) {
@@ -59,14 +67,10 @@ class CakeTestDispatcher extends Dispatcher {
  * @param array $params
  * @param boolean $missingAction
  * @return Controller
- * @access protected
+ * @access proptected
  */
 	function _invoke(&$controller, $params, $missingAction = false) {
 		$this->controller =& $controller;
-
-		if (array_key_exists('layout', $params)) {
-			$this->controller->layout = $params['layout'];
-		}
 
 		if (isset($this->testCase) && method_exists($this->testCase, 'startController')) {
 			$this->testCase->startController($this->controller, $params);
@@ -537,7 +541,7 @@ class CakeTestCase extends UnitTestCase {
 				$fixture->truncate($this->db);
 				$fixture->insert($this->db);
 			} else {
-				trigger_error(sprintf(__('Referenced fixture class %s not found', true), $class), E_USER_WARNING);
+				trigger_error("Referenced fixture class {$class} not found", E_USER_WARNING);
 			}
 		}
 	}
@@ -588,9 +592,6 @@ class CakeTestCase extends UnitTestCase {
 		}
 		$i = 0;
 		foreach ($normalized as $tags) {
-			if (!is_array($tags)) {
-				$tags = (string)$tags;
-			}
 			$i++;
 			if (is_string($tags) && $tags{0} == '<') {
 				$tags = array(substr($tags, 1) => array());
@@ -635,39 +636,36 @@ class CakeTestCase extends UnitTestCase {
 				}
 				$attrs = array();
 				$explanations = array();
-				$i = 1;
 				foreach ($attributes as $attr => $val) {
 					if (is_numeric($attr) && preg_match('/^preg\:\/(.+)\/$/i', $val, $matches)) {
 						$attrs[] = $matches[1];
 						$explanations[] = sprintf('Regex "%s" matches', $matches[1]);
 						continue;
 					} else {
-						$quotes = '["\']';
+						$quotes = '"';
 						if (is_numeric($attr)) {
 							$attr = $val;
 							$val = '.+?';
 							$explanations[] = sprintf('Attribute "%s" present', $attr);
 						} elseif (!empty($val) && preg_match('/^preg\:\/(.+)\/$/i', $val, $matches)) {
-							$quotes = '["\']?';
+							$quotes = '"?';
 							$val = $matches[1];
 							$explanations[] = sprintf('Attribute "%s" matches "%s"', $attr, $val);
 						} else {
 							$explanations[] = sprintf('Attribute "%s" == "%s"', $attr, $val);
 							$val = preg_quote($val, '/');
 						}
-						$attrs[] = '[\s]+' . preg_quote($attr, '/') . '=' . $quotes . $val . $quotes;
+						$attrs[] = '[\s]+'.preg_quote($attr, '/').'='.$quotes.$val.$quotes;
 					}
-					$i++;
 				}
 				if ($attrs) {
 					$permutations = $this->__array_permute($attrs);
-
 					$permutationTokens = array();
 					foreach ($permutations as $permutation) {
-						$permutationTokens[] = implode('', $permutation);
+						$permutationTokens[] = join('', $permutation);
 					}
 					$regex[] = array(
-						sprintf('%s', implode(', ', $explanations)),
+						sprintf('%s', join(', ', $explanations)),
 						$permutationTokens,
 						$i,
 					);
@@ -773,10 +771,17 @@ class CakeTestCase extends UnitTestCase {
 				$pluginName = $parts[1];
 				$fixture = $parts[2];
 				$fixturePaths = array(
-					App::pluginPath($pluginName) . 'tests' . DS . 'fixtures',
+					APP . 'plugins' . DS . $pluginName . DS . 'tests' . DS . 'fixtures',
 					TESTS . 'fixtures',
 					VENDORS . 'tests' . DS . 'fixtures'
 				);
+				$pluginPaths = App::path('plugins');
+				foreach ($pluginPaths as $path) {
+					if (file_exists($path . $pluginName . DS . 'tests' . DS. 'fixtures')) {
+						$fixturePaths[0] = $path . $pluginName . DS . 'tests' . DS. 'fixtures';
+						break;
+					}
+				}
 			} else {
 				$fixturePaths = array(
 					TESTS . 'fixtures',
@@ -833,3 +838,4 @@ class CakeTestCase extends UnitTestCase {
 		}
 	}
 }
+?>

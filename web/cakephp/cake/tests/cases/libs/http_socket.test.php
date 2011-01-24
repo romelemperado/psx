@@ -1,20 +1,28 @@
 <?php
+/* SVN FILE: $Id$ */
+
 /**
  * HttpSocketTest file
  *
+ * Long description for file
+ *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) Tests <http://book.cakephp.org/view/1196/Testing>
- * Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) Tests <https://trac.cakephp.org/wiki/Developement/TestSuite>
+ * Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
  *
  *  Licensed under The Open Group Test Suite License
  *  Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://book.cakephp.org/view/1196/Testing CakePHP(tm) Tests
+ * @filesource
+ * @copyright     Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * @link          https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
  * @package       cake
  * @subpackage    cake.tests.cases.libs
  * @since         CakePHP(tm) v 1.2.0.4206
+ * @version       $Revision$
+ * @modifiedby    $LastChangedBy$
+ * @lastmodified  $Date$
  * @license       http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
  */
 App::import('Core', 'HttpSocket');
@@ -455,25 +463,6 @@ class HttpSocketTest extends CakeTestCase {
 				)
 			)
 			, 9 => array(
-				'request' => array('method' => 'POST', 'uri' => 'http://www.cakephp.org:8080/posts/add', 'body' => array('name' => 'HttpSocket-is-released', 'date' => 'today'))
-				, 'expectation' => array(
-					'config' => array(
-						'port' => 8080
-						, 'request' => array(
-							'uri' => array(
-								'port' => 8080
-							)
-						)
-					)
-					, 'request' => array(
-						'uri' => array(
-							'port' => 8080
-						)
-						, 'header' => "Host: www.cakephp.org:8080\r\nConnection: close\r\nUser-Agent: CakePHP\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 38\r\n"
-					)
-				)
-			)
-			, 10 => array(
 				'request' => array('method' => 'POST', 'uri' => 'https://www.cakephp.org/posts/add', 'body' => array('name' => 'HttpSocket-is-released', 'date' => 'today'))
 				, 'expectation' => array(
 					'config' => array(
@@ -490,11 +479,10 @@ class HttpSocketTest extends CakeTestCase {
 							'scheme' => 'https'
 							, 'port' => 443
 						)
-						, 'header' => "Host: www.cakephp.org\r\nConnection: close\r\nUser-Agent: CakePHP\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 38\r\n"
 					)
 				)
 			)
-			, 11 => array(
+			, 10 => array(
 				'request' => array(
 						'method' => 'POST',
 						'uri' => 'https://www.cakephp.org/posts/add',
@@ -656,31 +644,6 @@ class HttpSocketTest extends CakeTestCase {
 
 		$this->RequestSocket->expect('request', a(array('method' => 'GET', 'uri' => 'http://www.google.com/', 'auth' => array('user' => 'foo', 'pass' => 'bar'))));
 		$this->RequestSocket->get('http://www.google.com/', null, array('auth' => array('user' => 'foo', 'pass' => 'bar')));
-	}
-
-/**
- * test that two consecutive get() calls reset the authentication credentials.
- *
- * @return void
- */
-	function testConsecutiveGetResetsAuthCredentials() {
-		$socket = new MockHttpSocket();
-		$socket->config['request']['auth'] = array(
-			'method' => 'Basic',
-			'user' => 'mark',
-			'pass' => 'secret'
-		);
-		$socket->get('http://mark:secret@example.com/test');
-		$this->assertEqual($socket->request['uri']['user'], 'mark');
-		$this->assertEqual($socket->request['uri']['pass'], 'secret');
-
-		$socket->get('/test2');
-		$this->assertEqual($socket->request['auth']['user'], 'mark');
-		$this->assertEqual($socket->request['auth']['pass'], 'secret');
-
-		$socket->get('/test3');
-		$this->assertEqual($socket->request['auth']['user'], 'mark');
-		$this->assertEqual($socket->request['auth']['pass'], 'secret');
 	}
 
 /**
@@ -1063,28 +1026,6 @@ class HttpSocketTest extends CakeTestCase {
 			'host' => 'www.google.com',
 			'port' => 8080,
 		));
-
-		$uri = $this->Socket->parseUri('http://www.cakephp.org/?param1=value1&param2=value2%3Dvalue3');
-		$this->assertIdentical($uri, array(
-			'scheme' => 'http',
-			'host' => 'www.cakephp.org',
-			'path' => '/',
-			'query' => array(
-				'param1' => 'value1',
-				'param2' => 'value2=value3'
-			)
-		));
-
-		$uri = $this->Socket->parseUri('http://www.cakephp.org/?param1=value1&param2=value2=value3');
-		$this->assertIdentical($uri, array(
-			'scheme' => 'http',
-			'host' => 'www.cakephp.org',
-			'path' => '/',
-			'query' => array(
-				'param1' => 'value1',
-				'param2' => 'value2=value3'
-			)
-		));
 	}
 
 /**
@@ -1110,9 +1051,6 @@ class HttpSocketTest extends CakeTestCase {
 
 		$r = $this->Socket->buildUri(array('host' => 'www.cakephp.org', 'port' => 23));
 		$this->assertIdentical($r, 'http://www.cakephp.org:23/');
-
-		$r = $this->Socket->buildUri(array('path' => 'www.google.com/search', 'query' => 'q=cakephp'));
-		$this->assertIdentical($r, 'http://www.google.com/search?q=cakephp');
 
 		$r = $this->Socket->buildUri(array('host' => 'www.cakephp.org', 'scheme' => 'https', 'port' => 79));
 		$this->assertIdentical($r, 'https://www.cakephp.org:79/');
@@ -1420,7 +1358,7 @@ class HttpSocketTest extends CakeTestCase {
 				'path' => '/accounts'
 			)
 		);
-		$expect = "Cookie: foo=bar; people=jim,jack,johnny\";\"\r\n";
+		$expect = "Cookie: foo=bar\r\nCookie: people=jim,jack,johnny\";\"\r\n";
 		$result = $this->Socket->buildCookies($cookies);
 		$this->assertEqual($result, $expect);
 	}
@@ -1556,3 +1494,4 @@ class HttpSocketTest extends CakeTestCase {
 		$this->assertIdentical($return, true);
 	}
 }
+?>

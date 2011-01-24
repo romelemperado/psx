@@ -1,21 +1,29 @@
 <?php
+/* SVN FILE: $Id$ */
+
 /**
- * Session Helper provides access to the Session in the Views.
+ * Short description for file.
+ *
+ * Long description for file
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) :  Rapid Development Framework (http://www.cakephp.org)
+ * Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @filesource
+ * @copyright     Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * @link          http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
  * @package       cake
  * @subpackage    cake.cake.libs.view.helpers
  * @since         CakePHP(tm) v 1.1.7.3328
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @version       $Revision$
+ * @modifiedby    $LastChangedBy$
+ * @lastmodified  $Date$
+ * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 if (!class_exists('cakesession')) {
 	require LIBS . 'cake_session.php';
@@ -27,7 +35,7 @@ if (!class_exists('cakesession')) {
  *
  * @package       cake
  * @subpackage    cake.cake.libs.view.helpers
- * @link http://book.cakephp.org/view/1465/Session
+ *
  */
 class SessionHelper extends CakeSession {
 
@@ -36,7 +44,7 @@ class SessionHelper extends CakeSession {
  *
  * @var array
  */
-	var $helpers = array();
+	var $helpers = null;
 
 /**
  * Used to determine if methods implementation is used, or bypassed
@@ -53,8 +61,6 @@ class SessionHelper extends CakeSession {
 	function __construct($base = null) {
 		if (Configure::read('Session.start') === true) {
 			parent::__construct($base, false);
-			$this->start();
-			$this->__active = true;
 		} else {
 			$this->__active = false;
 		}
@@ -64,7 +70,6 @@ class SessionHelper extends CakeSession {
  * Turn sessions on if 'Session.start' is set to false in core.php
  *
  * @param string $base
- * @access public
  */
 	function activate($base = null) {
 		$this->__active = true;
@@ -73,13 +78,13 @@ class SessionHelper extends CakeSession {
 /**
  * Used to read a session values set in a controller for a key or return values for all keys.
  *
- * In your view: `$session->read('Controller.sessKey');`
+ * In your view: $session->read('Controller.sessKey');
  * Calling the method without a param will return all session vars
  *
  * @param string $name the name of the session key you want to read
+ *
  * @return values from the session vars
  * @access public
- * @link http://book.cakephp.org/view/1466/Methods
  */
 	function read($name = null) {
 		if ($this->__active === true && $this->__start()) {
@@ -91,12 +96,11 @@ class SessionHelper extends CakeSession {
 /**
  * Used to check is a session key has been set
  *
- * In your view: `$session->check('Controller.sessKey');`
+ * In your view: $session->check('Controller.sessKey');
  *
  * @param string $name
  * @return boolean
  * @access public
- * @link http://book.cakephp.org/view/1466/Methods
  */
 	function check($name) {
 		if ($this->__active === true && $this->__start()) {
@@ -108,11 +112,10 @@ class SessionHelper extends CakeSession {
 /**
  * Returns last error encountered in a session
  *
- * In your view: `$session->error();`
+ * In your view: $session->error();
  *
  * @return string last error
  * @access public
- * @link http://book.cakephp.org/view/1466/Methods
  */
 	function error() {
 		if ($this->__active === true && $this->__start()) {
@@ -125,40 +128,39 @@ class SessionHelper extends CakeSession {
  * Used to render the message set in Controller::Session::setFlash()
  *
  * In your view: $session->flash('somekey');
- * Will default to flash if no param is passed
+ * 					Will default to flash if no param is passed
  *
  * @param string $key The [Message.]key you are rendering in the view.
- * @return boolean|string Will return the value if $key is set, or false if not set.
+ * @return string Will echo the value if $key is set, or false if not set.
  * @access public
- * @link http://book.cakephp.org/view/1466/Methods
- * @link http://book.cakephp.org/view/1467/flash
  */
 	function flash($key = 'flash') {
-		$out = false;
-
 		if ($this->__active === true && $this->__start()) {
 			if (parent::check('Message.' . $key)) {
 				$flash = parent::read('Message.' . $key);
 
-				if ($flash['element'] == 'default') {
+				if ($flash['layout'] == 'default') {
 					if (!empty($flash['params']['class'])) {
 						$class = $flash['params']['class'];
 					} else {
 						$class = 'message';
 					}
 					$out = '<div id="' . $key . 'Message" class="' . $class . '">' . $flash['message'] . '</div>';
-				} elseif ($flash['element'] == '' || $flash['element'] == null) {
+				} elseif ($flash['layout'] == '' || $flash['layout'] == null) {
 					$out = $flash['message'];
 				} else {
 					$view =& ClassRegistry::getObject('view');
-					$tmpVars = $flash['params'];
-					$tmpVars['message'] = $flash['message'];
-					$out = $view->element($flash['element'], $tmpVars);
+					list($tmpVars, $tmpTitle) = array($view->viewVars, $view->pageTitle);
+					list($view->viewVars, $view->pageTitle) = array($flash['params'], '');
+					$out = $view->renderLayout($flash['message'], $flash['layout']);
+					list($view->viewVars, $view->pageTitle) = array($tmpVars, $tmpTitle);
 				}
-				parent::delete('Message.' . $key);
+				echo($out);
+				parent::del('Message.' . $key);
+				return true;
 			}
 		}
-		return $out;
+		return false;
 	}
 
 /**
@@ -185,17 +187,28 @@ class SessionHelper extends CakeSession {
 	}
 
 /**
+ * Session id
+ *
+ * @return string Session id
+ * @access public
+ */
+	function id() {
+		return parent::id();
+	}
+
+/**
  * Determine if Session has been started
  * and attempt to start it if not
  *
  * @return boolean true if Session is already started, false if
  * Session could not be started
- * @access private
+ * @access public
  */
 	function __start() {
-		if (!$this->started()) {
-			return $this->start();
+		if (!parent::started()) {
+			parent::start();
 		}
 		return true;
 	}
 }
+?>

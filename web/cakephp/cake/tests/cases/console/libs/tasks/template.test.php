@@ -8,13 +8,13 @@
  * PHP versions 4 and 5
  *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * Copyright 2005-2009, Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright 2005-2009, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link          http://cakephp.org
  * @package       cake
  * @subpackage    cake.tests.cases.console.libs.tasks
  * @since         CakePHP(tm) v 1.3
@@ -81,8 +81,7 @@ class TemplateTaskTest extends CakeTestCase {
  * test that set sets variables
  *
  * @return void
- * @access public
- */
+ **/
 	function testSet() {
 		$this->Task->set('one', 'two');
 		$this->assertTrue(isset($this->Task->templateVars['one']));
@@ -93,20 +92,13 @@ class TemplateTaskTest extends CakeTestCase {
 		$this->assertEqual($this->Task->templateVars['one'], 'three');
 		$this->assertTrue(isset($this->Task->templateVars['four']));
 		$this->assertEqual($this->Task->templateVars['four'], 'five');
-		
-		$this->Task->templateVars = array();
-		$this->Task->set(array(3 => 'three', 4 => 'four'));
-		$this->Task->set(array(1 => 'one', 2 => 'two'));
-		$expected = array(3 => 'three', 4 => 'four', 1 => 'one', 2 => 'two');
-		$this->assertEqual($this->Task->templateVars, $expected);
 	}
 
 /**
  * test finding themes installed in
  *
  * @return void
- * @access public
- */
+ **/
 	function testFindingInstalledThemesForBake() {
 		$consoleLibs = CAKE_CORE_INCLUDE_PATH . DS . CAKE . 'console' . DS;
 		$this->Task->Dispatch->shellPaths = array($consoleLibs);
@@ -119,8 +111,7 @@ class TemplateTaskTest extends CakeTestCase {
  * that the user is not bugged.  If there are more, find and return the correct theme name
  *
  * @return void
- * @access public
- */
+ **/
 	function testGetThemePath() {
 		$defaultTheme = CAKE_CORE_INCLUDE_PATH . DS . dirname(CONSOLE_LIBS) . 'templates' . DS . 'default' .DS;
 		$this->Task->templatePaths = array('default' => $defaultTheme);
@@ -145,8 +136,7 @@ class TemplateTaskTest extends CakeTestCase {
  * test generate
  *
  * @return void
- * @access public
- */
+ **/
 	function testGenerate() {
 		App::build(array(
 			'shells' => array(
@@ -165,8 +155,7 @@ class TemplateTaskTest extends CakeTestCase {
  * ensure fallback to default works.
  *
  * @return void
- * @access public
- */
+ **/
 	function testGenerateWithTemplateFallbacks() {
 		App::build(array(
 			'shells' => array(
@@ -187,3 +176,4 @@ class TemplateTaskTest extends CakeTestCase {
 		$this->assertPattern('/ArticleFixture extends CakeTestFixture/', $result);
 	}
 }
+?>

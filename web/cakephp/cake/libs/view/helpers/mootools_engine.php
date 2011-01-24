@@ -12,18 +12,19 @@
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) :  Rapid Development Framework (http://www.cakephp.org)
+ * Copyright 2005-2009, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @filesource
+ * @copyright     Copyright 2005-2009, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * @link          http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
  * @package       cake
  * @subpackage    cake.libs.view.helpers
  * @since         CakePHP(tm) v 1.3
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 App::import('Helper', 'Js');
 
@@ -32,7 +33,7 @@ class MootoolsEngineHelper extends JsBaseEngineHelper {
  * Option mappings for MooTools
  *
  * @var array
- */
+ **/
 	var $_optionMap = array(
 		'request' => array(
 			'complete' => 'onComplete',
@@ -70,7 +71,7 @@ class MootoolsEngineHelper extends JsBaseEngineHelper {
  * Contains a list of callback names -> default arguments.
  *
  * @var array
- */
+ **/
 	var $_callbackArguments = array(
 		'slider' => array(
 			'onTick' => 'position',
@@ -116,7 +117,7 @@ class MootoolsEngineHelper extends JsBaseEngineHelper {
  *
  * @param string $selector The selector that is targeted
  * @return object instance of $this. Allows chained methods.
- */
+ **/
 	function get($selector) {
 		$this->_multipleSelection = false;
 		if ($selector == 'window' || $selector == 'document') {
@@ -144,7 +145,7 @@ class MootoolsEngineHelper extends JsBaseEngineHelper {
  * @param string $callback The Javascript function you wish to trigger or the function literal
  * @param array $options Options for the event.
  * @return string completed event handler
- */
+ **/
 	function event($type, $callback, $options = array()) {
 		$defaults = array('wrap' => true, 'stop' => true);
 		$options = array_merge($defaults, $options);
@@ -165,7 +166,7 @@ class MootoolsEngineHelper extends JsBaseEngineHelper {
  *
  * @param string $functionBody The code to run on domReady
  * @return string completed domReady method
- */
+ **/
 	function domReady($functionBody) {
 		$this->selection = 'window';
 		return $this->event('domready', $functionBody, array('stop' => false));
@@ -177,7 +178,7 @@ class MootoolsEngineHelper extends JsBaseEngineHelper {
  * @param string $method The method you want to apply to the selection
  * @param string $callback The function body you wish to apply during the iteration.
  * @return string completed iteration
- */
+ **/
 	function each($callback) {
 		return $this->selection . '.each(function (item, index) {' . $callback . '});';
 	}
@@ -189,7 +190,7 @@ class MootoolsEngineHelper extends JsBaseEngineHelper {
  * @param array $options Array of options for the effect.
  * @return string completed string with effect.
  * @see JsBaseEngineHelper::effect()
- */
+ **/
 	function effect($name, $options = array()) {
 		$speed = null;
 		if (isset($options['speed']) && in_array($options['speed'], array('fast', 'slow'))) {
@@ -231,7 +232,7 @@ class MootoolsEngineHelper extends JsBaseEngineHelper {
  * @param mixed $url
  * @param array $options
  * @return string The completed ajax call.
- */
+ **/
 	function request($url, $options = array()) {
 		$url = $this->url($url);
 		$options = $this->_mapOptions('request', $options);
@@ -269,8 +270,8 @@ class MootoolsEngineHelper extends JsBaseEngineHelper {
  *
  * @param array $options Array of options for the sortable.
  * @return string Completed sortable script.
- * @see JsBaseEngineHelper::sortable() for options list.
- */
+ * @see JsHelper::sortable() for options list.
+ **/
 	function sortable($options = array()) {
 		$options = $this->_processOptions('sortable', $options);
 		return 'var jsSortable = new Sortables(' . $this->selection . ', {' . $options . '});';
@@ -284,7 +285,7 @@ class MootoolsEngineHelper extends JsBaseEngineHelper {
  * @param array $options Array of options for the draggable.
  * @return string Completed draggable script.
  * @see JsHelper::drag() for options list.
- */
+ **/
 	function drag($options = array()) {
 		$options = $this->_processOptions('drag', $options);
 		return $this->selection . '.makeDraggable({' . $options . '});';
@@ -302,8 +303,8 @@ class MootoolsEngineHelper extends JsBaseEngineHelper {
  *
  * @param array $options Array of options for the droppable.
  * @return string Completed droppable script.
- * @see JsBaseEngineHelper::drop() for options list.
- */
+ * @see JsHelper::drop() for options list.
+ **/
 	function drop($options = array()) {
 		if (empty($options['drag'])) {
 			trigger_error(
@@ -332,8 +333,8 @@ class MootoolsEngineHelper extends JsBaseEngineHelper {
  *
  * @param array $options Array of options for the slider.
  * @return string Completed slider script.
- * @see JsBaseEngineHelper::slider() for options list.
- */
+ * @see JsHelper::slider() for options list.
+ **/
 	function slider($options = array()) {
 		$slider = $this->selection;
 		$this->get($options['handle']);
@@ -357,8 +358,8 @@ class MootoolsEngineHelper extends JsBaseEngineHelper {
  *
  * @param array $options Array of options.
  * @return string Completed serializeForm() snippet
- * @see JsBaseEngineHelper::serializeForm()
- */
+ * @see JsHelper::serializeForm()
+ **/
 	function serializeForm($options = array()) {
 		$options = array_merge(array('isForm' => false, 'inline' => false), $options);
 		$selection = $this->selection;
@@ -372,3 +373,4 @@ class MootoolsEngineHelper extends JsBaseEngineHelper {
 		return $selection . $method;
 	}
 }
+?>

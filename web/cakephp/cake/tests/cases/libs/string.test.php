@@ -1,17 +1,21 @@
 <?php
+/* SVN FILE: $Id$ */
+
 /**
  * StringTest file
+ *
+ * Long description for file
  *
  * PHP versions 4 and 5
  *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * Copyright 2005-2009, Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://book.cakephp.org/view/1196/Testing CakePHP(tm) Tests
+ * @copyright     Copyright 2005-2009, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link          http://cakephp.org
  * @package       cake
  * @subpackage    cake.tests.cases.libs
  * @since         CakePHP(tm) v 1.2.0.5432
@@ -67,11 +71,6 @@ class StringTest extends CakeTestCase {
  * @return void
  */
 	function testInsert() {
-		$string = 'some string';
-		$expected = 'some string';
-		$result = String::insert($string, array());
-		$this->assertEqual($result, $expected);
-
 		$string = '2 + 2 = :sum. Cake is :adjective.';
 		$expected = '2 + 2 = 4. Cake is yummy.';
 		$result = String::insert($string, array('sum' => '4', 'adjective' => 'yummy'));
@@ -200,33 +199,13 @@ class StringTest extends CakeTestCase {
 		$result = String::insert('?-pended result', array('Pre'));
 		$expected = "Pre-pended result";
 		$this->assertEqual($result, $expected);
-
-		$string = 'switching :timeout / :timeout_count';
-		$expected = 'switching 5 / 10';
-		$result = String::insert($string, array('timeout' => 5, 'timeout_count' => 10));
-		$this->assertEqual($result, $expected);
-
-		$string = 'switching :timeout / :timeout_count';
-		$expected = 'switching 5 / 10';
-		$result = String::insert($string, array('timeout_count' => 10, 'timeout' => 5));
-		$this->assertEqual($result, $expected);
-
-		$string = 'switching :timeout_count by :timeout';
-		$expected = 'switching 10 by 5';
-		$result = String::insert($string, array('timeout' => 5, 'timeout_count' => 10));
-		$this->assertEqual($result, $expected);
-
-		$string = 'switching :timeout_count by :timeout';
-		$expected = 'switching 10 by 5';
-		$result = String::insert($string, array('timeout_count' => 10, 'timeout' => 5));
-		$this->assertEqual($result, $expected);
 	}
 
 /**
  * test Clean Insert
  *
  * @return void
- */
+ **/
 	function testCleanInsert() {
 		$result = String::cleanInsert(':incomplete', array(
 			'clean' => true, 'before' => ':', 'after' => ''
@@ -300,11 +279,6 @@ class StringTest extends CakeTestCase {
 		$expected = array('tagA', '"single tag"', 'tagB');
 		$this->assertEqual($expected, $result);
 	}
-	
-	function testReplaceWithQuestionMarkInString() {
-		$string = ':a, :b and :c?';
-		$expected = '2 and 3?';
-		$result = String::insert($string, array('b' => 2, 'c' => 3), array('clean' => true));
-		$this->assertEqual($expected, $result);
-	}
 }
+
+?>

@@ -1,20 +1,28 @@
 <?php
+/* SVN FILE: $Id$ */
+
 /**
  * SessionHelperTest file
  *
+ * Long description for file
+ *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) Tests <http://book.cakephp.org/view/1196/Testing>
- * Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) Tests <https://trac.cakephp.org/wiki/Developement/TestSuite>
+ * Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
  *
  *  Licensed under The Open Group Test Suite License
  *  Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://book.cakephp.org/view/1196/Testing CakePHP(tm) Tests
+ * @filesource
+ * @copyright     Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * @link          https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
  * @package       cake
  * @subpackage    cake.tests.cases.libs.view.helpers
  * @since         CakePHP(tm) v 1.2.0.4206
+ * @version       $Revision$
+ * @modifiedby    $LastChangedBy$
+ * @lastmodified  $Date$
  * @license       http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
  */
 if (!defined('CAKEPHP_UNIT_TEST_EXECUTION')) {
@@ -37,29 +45,30 @@ class SessionHelperTest extends CakeTestCase {
  * @access public
  * @return void
  */
-	function startTest() {
+	function setUp() {
 		$this->Session = new SessionHelper();
+		$this->Session->__start();
 
 		$_SESSION = array(
 			'test' => 'info',
 			'Message' => array(
 				'flash' => array(
-					'element' => 'default',
+					'layout' => 'default',
 					'params' => array(),
 					'message' => 'This is a calling'
 				),
 				'notification' => array(
-					'element' => 'session_helper',
+					'layout' => 'session_helper',
 					'params' => array('title' => 'Notice!', 'name' => 'Alert!'),
 					'message' => 'This is a test of the emergency broadcasting system',
 				),
 				'classy' => array(
-					'element' => 'default',
+					'layout' => 'default',
 					'params' => array('class' => 'positive'),
 					'message' => 'Recorded'
 				),
 				'bare' => array(
-					'element' => null,
+					'layout' => null,
 					'message' => 'Bare message',
 					'params' => array(),
 				),
@@ -90,15 +99,6 @@ class SessionHelperTest extends CakeTestCase {
 	}
 
 /**
- * test construction and initial property settings
- *
- * @return void
- */
-	function testConstruct() {
-		$this->assertFalse(empty($this->Session->sessionTime));
-		$this->assertFalse(empty($this->Session->security));
-	}
-/**
  * testRead method
  *
  * @access public
@@ -121,7 +121,7 @@ class SessionHelperTest extends CakeTestCase {
 	function testCheck() {
 		$this->assertTrue($this->Session->check('test'));
 
-		$this->assertTrue($this->Session->check('Message.flash.element'));
+		$this->assertTrue($this->Session->check('Message.flash.layout'));
 
 		$this->assertFalse($this->Session->check('Does.not.exist'));
 
@@ -146,13 +146,19 @@ class SessionHelperTest extends CakeTestCase {
  * @return void
  */
 	function testFlash() {
-		$result = $this->Session->flash('flash', true);
+		ob_start();
+		$this->Session->flash();
+		$result = ob_get_contents();
+		ob_clean();
+
 		$expected = '<div id="flashMessage" class="message">This is a calling</div>';
 		$this->assertEqual($result, $expected);
 		$this->assertFalse($this->Session->check('Message.flash'));
 
 		$expected = '<div id="classyMessage" class="positive">Recorded</div>';
-		$result = $this->Session->flash('classy', true);
+		ob_start();
+		$this->Session->flash('classy');
+		$result = ob_get_clean();
 		$this->assertEqual($result, $expected);
 
 		App::build(array(
@@ -161,13 +167,21 @@ class SessionHelperTest extends CakeTestCase {
 		$controller = new Controller();
 		$this->Session->view = new View($controller);
 
-		$result = $this->Session->flash('notification', true);
+		ob_start();
+		$this->Session->flash('notification');
+		$result = ob_get_contents();
+		ob_clean();
+
 		$result = str_replace("\r\n", "\n", $result);
 		$expected = "<div id=\"notificationLayout\">\n\t<h1>Alert!</h1>\n\t<h3>Notice!</h3>\n\t<p>This is a test of the emergency broadcasting system</p>\n</div>";
 		$this->assertEqual($result, $expected);
 		$this->assertFalse($this->Session->check('Message.notification'));
 
-		$result = $this->Session->flash('bare');
+		ob_start();
+		$this->Session->flash('bare');
+		$result = ob_get_contents();
+		ob_clean();
+
 		$expected = 'Bare message';
 		$this->assertEqual($result, $expected);
 		$this->assertFalse($this->Session->check('Message.bare'));
@@ -234,3 +248,4 @@ class SessionHelperTest extends CakeTestCase {
 		//$this->assertFalse($this->Session->valid());
 	}
 }
+?>

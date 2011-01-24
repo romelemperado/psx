@@ -1,26 +1,35 @@
 <?php
+/* SVN FILE: $Id$ */
+
 /**
  * DboSourceTest file
  *
+ * Long description for file
+ *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) Tests <http://book.cakephp.org/view/1196/Testing>
- * Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) Tests <https://trac.cakephp.org/wiki/Developement/TestSuite>
+ * Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
  *
  *	Licensed under The Open Group Test Suite License
  *	Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://book.cakephp.org/view/1196/Testing CakePHP(tm) Tests
+ * @filesource
+ * @copyright     Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * @link          https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
  * @package       cake
  * @subpackage    cake.tests.cases.libs.model.datasources
  * @since         CakePHP(tm) v 1.2.0.4206
+ * @version       $Revision$
+ * @modifiedby    $LastChangedBy$
+ * @lastmodified  $Date$
  * @license       http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
  */
 if (!defined('CAKEPHP_UNIT_TEST_EXECUTION')) {
 	define('CAKEPHP_UNIT_TEST_EXECUTION', 1);
 }
-App::import('Model', array('Model', 'DataSource', 'DboSource', 'DboMysql', 'App'));
+App::import('Core', array('Model', 'DataSource', 'DboSource', 'DboMysql'));
+App::import('Model', 'App');
 require_once dirname(dirname(__FILE__)) . DS . 'models.php';
 
 /**
@@ -1279,7 +1288,7 @@ class DboSourceTest extends CakeTestCase {
  */
 	var $fixtures = array(
 		'core.apple', 'core.article', 'core.articles_tag', 'core.attachment', 'core.comment',
-		'core.sample', 'core.tag', 'core.user', 'core.post', 'core.author', 'core.data_test'
+		'core.sample', 'core.tag', 'core.user', 'core.post', 'core.author'
 	);
 
 /**
@@ -1339,7 +1348,6 @@ class DboSourceTest extends CakeTestCase {
 	function endTest() {
 		unset($this->Model);
 		Configure::write('debug', $this->debug);
-		ClassRegistry::flush();
 		unset($this->debug);
 	}
 
@@ -2045,28 +2053,6 @@ class DboSourceTest extends CakeTestCase {
 	}
 
 /**
- * test generateAssociationQuery with a hasMany and an aggregate function.
- *
- * @return void
- */
-	function testGenerateAssociationQueryHasManyAndAggregateFunction() {
-		$this->Model =& new TestModel5();
-		$this->Model->schema();
-		$this->_buildRelatedModels($this->Model);
-
-		$binding = array('type' => 'hasMany', 'model' => 'TestModel6');
-		$queryData = array('fields' => array('MIN(TestModel5.test_model4_id)'));
-		$resultSet = null;
-		$null = null;
-
-		$params = &$this->_prepareAssociationQuery($this->Model, $queryData, $binding);
-		$this->Model->recursive = 0;
-
-		$result = $this->testDb->generateAssociationQuery($this->Model, $null, $params['type'], $params['assoc'], $params['assocData'], $queryData, false, $resultSet);
-		$this->assertPattern('/^SELECT\s+MIN\(`TestModel5`\.`test_model4_id`\)\s+FROM/', $result);
-	}
-
-/**
  * testGenerateAssociationQueryHasAndBelongsToMany method
  *
  * @access public
@@ -2256,30 +2242,6 @@ class DboSourceTest extends CakeTestCase {
 		$this->assertEqual($result, $expected);
 	}
 
-/**
- * test that booleans and null make logical condition strings.
- *
- * @return void
- */
-	function testBooleanNullConditionsParsing() {
-		$result = $this->testDb->conditions(true);
-		$this->assertEqual($result, ' WHERE 1 = 1', 'true conditions failed %s');
-
-		$result = $this->testDb->conditions(false);
-		$this->assertEqual($result, ' WHERE 0 = 1', 'false conditions failed %s');
-
-		$result = $this->testDb->conditions(null);
-		$this->assertEqual($result, ' WHERE 1 = 1', 'null conditions failed %s');
-
-		$result = $this->testDb->conditions(array());
-		$this->assertEqual($result, ' WHERE 1 = 1', 'array() conditions failed %s');
-
-		$result = $this->testDb->conditions('');
-		$this->assertEqual($result, ' WHERE 1 = 1', '"" conditions failed %s');
-
-		$result = $this->testDb->conditions(' ', '"  " conditions failed %s');
-		$this->assertEqual($result, ' WHERE 1 = 1');
-	}
 /**
  * testStringConditionsParsing method
  *
@@ -2548,11 +2510,11 @@ class DboSourceTest extends CakeTestCase {
 		$this->assertEqual($result, $expected);
 
 		$result = $this->testDb->conditions(array('score BETWEEN ? AND ?' => array(90.1, 95.7)));
-		$expected = " WHERE `score` BETWEEN 90.100000 AND 95.700000";
+		$expected = " WHERE `score` BETWEEN 90.1 AND 95.7";
 		$this->assertEqual($result, $expected);
 
 		$result = $this->testDb->conditions(array('Post.title' => 1.1));
-		$expected = " WHERE `Post`.`title` = 1.100000";
+		$expected = " WHERE `Post`.`title` = 1.1";
 		$this->assertEqual($result, $expected);
 
 		$result = $this->testDb->conditions(array('Post.title' => 1.1), true, true, new Post());
@@ -2889,10 +2851,6 @@ class DboSourceTest extends CakeTestCase {
 		);
 		$this->assertEqual($result, $expected);
 
-		$result = $this->testDb->fields($this->Model, null, "(`Provider`.`star_total` / `Provider`.`total_ratings`) as `rating`");
-		$expected = array("(`Provider`.`star_total` / `Provider`.`total_ratings`) as `rating`");
-		$this->assertEqual($result, $expected);
-
 		$result = $this->testDb->fields($this->Model, 'Post');
 		$expected = array(
 			'`Post`.`id`', '`Post`.`client_id`', '`Post`.`name`', '`Post`.`login`',
@@ -2970,35 +2928,8 @@ class DboSourceTest extends CakeTestCase {
 		$expected = array(
 			'`Foo`.`id`',
 			'`Foo`.`title`',
-			'(user_count + discussion_count + post_count) AS score'
+			'(user_count + discussion_count + post_count) AS `score`'
 		);
-		$this->assertEqual($result, $expected);
-	}
-
-/**
- * test that fields() will accept objects made from DboSource::expression
- *
- * @return void
- */
-	function testFieldsWithExpression() {
-		$expression = $this->testDb->expression("CASE Sample.id WHEN 1 THEN 'Id One' ELSE 'Other Id' END AS case_col");
-		$result = $this->testDb->fields($this->Model, null, array("id", $expression));
-		$expected = array(
-			'`TestModel`.`id`',
-			"CASE Sample.id WHEN 1 THEN 'Id One' ELSE 'Other Id' END AS case_col"
-		);
-		$this->assertEqual($result, $expected);
-	}
-
-/**
- * test that order() will accept objects made from DboSource::expression
- *
- * @return void
- */
-	function testOrderWithExpression() {
-		$expression = $this->testDb->expression("CASE Sample.id WHEN 1 THEN 'Id One' ELSE 'Other Id' END AS case_col");
-		$result = $this->testDb->order($expression);
-		$expected = " ORDER BY CASE Sample.id WHEN 1 THEN 'Id One' ELSE 'Other Id' END AS case_col";
 		$this->assertEqual($result, $expected);
 	}
 
@@ -3477,7 +3408,7 @@ class DboSourceTest extends CakeTestCase {
 		$this->assertPattern('/^\s*ORDER BY\s+`title`\s+ASC\s*$/', $result);
 
 		$result = $this->testDb->order("Dealer.id = 7 desc, Dealer.id = 3 desc, Dealer.title asc");
-		$expected = " ORDER BY `Dealer`.`id` = 7 desc, `Dealer`.`id` = 3 desc, `Dealer`.`title` asc";
+		$expected = " ORDER BY `Dealer`.`id` = 7 desc,  `Dealer`.`id` = 3 desc,  `Dealer`.`title` asc";
 		$this->assertEqual($result, $expected);
 
 		$result = $this->testDb->order(array("Page.name" => "='test' DESC"));
@@ -3657,16 +3588,16 @@ class DboSourceTest extends CakeTestCase {
 		);
 		$this->testDb->buildColumn($data);
 
+		$this->testDb->columns = array('varchar(255)' => 1);
 		$data = array(
 			'name' => 'testName',
-			'type' => 'string',
-			'length' => 255,
+			'type' => 'varchar(255)',
 			'default',
 			'null' => true,
 			'key'
 		);
 		$result = $this->testDb->buildColumn($data);
-		$expected = '`testName` varchar(255) DEFAULT NULL';
+		$expected = '`testName`  DEFAULT NULL';
 		$this->assertEqual($result, $expected);
 
 		$data = array(
@@ -3675,98 +3606,25 @@ class DboSourceTest extends CakeTestCase {
 			'default' => '',
 			'null' => false,
 		);
-		$restore = $this->testDb->columns;
-
 		$this->testDb->columns = array('integer' => array('name' => 'int', 'limit' => '11', 'formatter' => 'intval'), );
 		$result = $this->testDb->buildColumn($data);
 		$expected = '`int_field` int(11) NOT NULL';
-		$this->assertEqual($result, $expected);
-
-		$this->testDb->fieldParameters['param'] = array(
-			'value' => 'COLLATE',
-			'quote' => false,
-			'join' => ' ',
-			'column' => 'Collate',
-			'position' => 'beforeDefault',
-			'options' => array('GOOD', 'OK')
-		);
-		$data = array(
-			'name' => 'int_field',
-			'type' => 'integer',
-			'default' => '',
-			'null' => false,
-			'param' => 'BAD'
-		);
-		$result = $this->testDb->buildColumn($data);
-		$expected = '`int_field` int(11) NOT NULL';
-		$this->assertEqual($result, $expected);
-
-		$data = array(
-			'name' => 'int_field',
-			'type' => 'integer',
-			'default' => '',
-			'null' => false,
-			'param' => 'GOOD'
-		);
-		$result = $this->testDb->buildColumn($data);
-		$expected = '`int_field` int(11) COLLATE GOOD NOT NULL';
-		$this->assertEqual($result, $expected);
-
-		$this->testDb->columns = $restore;
-
-		$data = array(
-			'name' => 'created',
-			'type' => 'timestamp',
-			'default' => 'current_timestamp',
-			'null' => false,
- 		);
-		$result = $this->db->buildColumn($data);
-		$expected = '`created` timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL';
-		$this->assertEqual($result, $expected);
-
-		$data = array(
-			'name' => 'created',
-			'type' => 'timestamp',
-			'default' => 'CURRENT_TIMESTAMP',
-			'null' => true,
-		);
-		$result = $this->db->buildColumn($data);
-		$expected = '`created` timestamp DEFAULT CURRENT_TIMESTAMP';
-		$this->assertEqual($result, $expected);
-
-		$data = array(
-			'name' => 'modified',
-			'type' => 'timestamp',
-			'null' => true,
-		);
-		$result = $this->db->buildColumn($data);
-		$expected = '`modified` timestamp NULL';
-		$this->assertEqual($result, $expected);
-
-		$data = array(
-			'name' => 'modified',
-			'type' => 'timestamp',
-			'default' => null,
-			'null' => true,
-		);
-		$result = $this->db->buildColumn($data);
-		$expected = '`modified` timestamp NULL';
-		$this->assertEqual($result, $expected);
+		$this->assertTrue($result, $expected);
 	}
 
 /**
  * test hasAny()
  *
  * @return void
- */
+ **/
 	function testHasAny() {
 		$this->testDb->hasAny($this->Model, array());
 		$expected = 'SELECT COUNT(`TestModel`.`id`) AS count FROM `test_models` AS `TestModel` WHERE 1 = 1';
-		$this->assertEqual(end($this->testDb->simulated), $expected);
+		$this->assertEqual($this->testDb->simulated[0], $expected);
 
 		$this->testDb->hasAny($this->Model, array('TestModel.name' => 'harry'));
 		$expected = "SELECT COUNT(`TestModel`.`id`) AS count FROM `test_models` AS `TestModel` WHERE `TestModel`.`name` = 'harry'";
-		$this->assertEqual(end($this->testDb->simulated), $expected);
+		$this->assertEqual($this->testDb->simulated[1], $expected);
 	}
 
 /**
@@ -4050,60 +3908,9 @@ class DboSourceTest extends CakeTestCase {
 		$expected = '(sm)';
 		$this->assertEqual($result, $expected);
 
-		$result = $this->testDb->name('name AS x');
-		$expected = '`name` AS `x`';
-		$this->assertEqual($result, $expected);
-
-		$result = $this->testDb->name('Model.name AS x');
-		$expected = '`Model`.`name` AS `x`';
-		$this->assertEqual($result, $expected);
-
 		$result = $this->testDb->name('Function(Something.foo)');
 		$expected = 'Function(`Something`.`foo`)';
 		$this->assertEqual($result, $expected);
-
-		$result = $this->testDb->name('Function(SubFunction(Something.foo))');
-		$expected = 'Function(SubFunction(`Something`.`foo`))';
-		$this->assertEqual($result, $expected);
-
-		$result = $this->testDb->name('Function(Something.foo) AS x');
-		$expected = 'Function(`Something`.`foo`) AS `x`';
-		$this->assertEqual($result, $expected);
-
-		$result = $this->testDb->name('name-with-minus');
-		$expected = '`name-with-minus`';
-		$this->assertEqual($result, $expected);
-
-		$result = $this->testDb->name(array('my-name', 'Foo-Model.*'));
-		$expected = array('`my-name`', '`Foo-Model`.*');
-		$this->assertEqual($result, $expected);
-	}
-
-/**
- * test that cacheMethod works as exepected
- *
- * @return void
- */
-	function testCacheMethod() {
-		$this->testDb->cacheMethods = true;
-		$result = $this->testDb->cacheMethod('name', 'some-key', 'stuff');
-		$this->assertEqual($result, 'stuff');
-
-		$result = $this->testDb->cacheMethod('name', 'some-key');
-		$this->assertEqual($result, 'stuff');
-
-		$result = $this->testDb->cacheMethod('conditions', 'some-key');
-		$this->assertNull($result);
-
-		$result = $this->testDb->cacheMethod('name', 'other-key');
-		$this->assertNull($result);
-
-		$this->testDb->cacheMethods = false;
-		$result = $this->testDb->cacheMethod('name', 'some-key', 'stuff');
-		$this->assertEqual($result, 'stuff');
-
-		$result = $this->testDb->cacheMethod('name', 'some-key');
-		$this->assertNull($result);
 	}
 
 /**
@@ -4116,8 +3923,7 @@ class DboSourceTest extends CakeTestCase {
 		$this->testDb->logQuery('Query 1');
 		$this->testDb->logQuery('Query 2');
 
-		$log = $this->testDb->getLog(false, false);
-		$result = Set::extract($log['log'], '/query');
+		$result = Set::extract($this->testDb->_queriesLog, '/query');
 		$expected = array('Query 1', 'Query 2');
 		$this->assertEqual($result, $expected);
 
@@ -4127,12 +3933,10 @@ class DboSourceTest extends CakeTestCase {
 		$this->assertFalse($result);
 		$this->testDb->error = $oldError;
 
-		$log = $this->testDb->getLog(false, false);
-		$result = Set::combine($log['log'], '/query', '/error');
+		$result = Set::combine($this->testDb->_queriesLog, '/query', '/error');
 		$expected = array('Query 1' => false, 'Query 2' => false, 'Error 1' => true);
 		$this->assertEqual($result, $expected);
 
-		Configure::write('debug', 2);
 		ob_start();
 		$this->testDb->showLog();
 		$contents = ob_get_clean();
@@ -4166,72 +3970,10 @@ class DboSourceTest extends CakeTestCase {
 	}
 
 /**
- * test getting the query log as an array.
- *
- * @return void
- */
-	function testGetLog() {
-		$this->testDb->logQuery('Query 1');
-		$this->testDb->logQuery('Query 2');
-
-		$oldError = $this->testDb->error;
-		$this->testDb->error = true;
-		$result = $this->testDb->logQuery('Error 1');
-		$this->assertFalse($result);
-		$this->testDb->error = $oldError;
-
-		$log = $this->testDb->getLog();
-		$expected = array('query' => 'Query 1', 'error' => '', 'affected' => '', 'numRows' => '', 'took' => '');
-		$this->assertEqual($log['log'][0], $expected);
-		$expected = array('query' => 'Query 2', 'error' => '', 'affected' => '', 'numRows' => '', 'took' => '');
-		$this->assertEqual($log['log'][1], $expected);
-		$expected = array('query' => 'Error 1', 'error' => true, 'affected' => '', 'numRows' => '', 'took' => '');
-		$this->assertEqual($log['log'][2], $expected);
-	}
-
-/**
- * test that execute runs queries.
- *
- * @return void
- */
-	function testExecute() {
-		$query = 'SELECT * FROM ' . $this->testDb->fullTableName('articles') . ' WHERE 1 = 1';
-
-		$this->db->_result = null;
-		$this->db->took = null;
-		$this->db->affected = null;
-		$result = $this->db->execute($query, array('stats' => false));
-		$this->assertNotNull($result, 'No query performed! %s');
-		$this->assertNull($this->db->took, 'Stats were set %s');
-		$this->assertNull($this->db->affected, 'Stats were set %s');
-
-		$result = $this->db->execute($query);
-		$this->assertNotNull($result, 'No query performed! %s');
-		$this->assertNotNull($this->db->took, 'Stats were not set %s');
-		$this->assertNotNull($this->db->affected, 'Stats were not set %s');
-	}
-
-/**
- * test that query() returns boolean values from operations like CREATE TABLE
- *
- * @return void
- */
-	function testFetchAllBooleanReturns() {
-		$name = $this->db->fullTableName('test_query');
-		$query = "CREATE TABLE {$name} (name varchar(10));";
-		$result = $this->db->query($query);
-		$this->assertTrue($result, 'Query did not return a boolean. %s');
-
-		$query = "DROP TABLE {$name};";
-		$result = $this->db->fetchAll($query);
-		$this->assertTrue($result, 'Query did not return a boolean. %s');
-	}
-
-/**
  * test ShowQuery generation of regular and error messages
  *
  * @return void
- */
+ **/
 	function testShowQuery() {
 		$this->testDb->error = false;
 		ob_start();
@@ -4252,343 +3994,5 @@ class DboSourceTest extends CakeTestCase {
 		$this->assertNoPattern('/Num:/s', $contents);
 		$this->assertNoPattern('/Took:/s', $contents);
 	}
-
-/**
- * test fields generating usable virtual fields to use in query
- *
- * @return void
- */
-	function testVirtualFields() {
-		$this->loadFixtures('Article');
-
-		$Article =& ClassRegistry::init('Article');
-		$Article->virtualFields = array(
-			'this_moment' => 'NOW()',
-			'two' => '1 + 1',
-			'comment_count' => 'SELECT COUNT(*) FROM ' . $this->db->fullTableName('comments') .
-				' WHERE Article.id = ' . $this->db->fullTableName('comments') . '.article_id'
-		);
-		$result = $this->db->fields($Article);
-		$expected = array(
-			'`Article`.`id`',
-			'`Article`.`user_id`',
-			'`Article`.`title`',
-			'`Article`.`body`',
-			'`Article`.`published`',
-			'`Article`.`created`',
-			'`Article`.`updated`',
-			'(NOW()) AS  `Article__this_moment`',
-			'(1 + 1) AS  `Article__two`',
-			'(SELECT COUNT(*) FROM comments WHERE `Article`.`id` = `comments`.`article_id`) AS  `Article__comment_count`'
-		);
-		$this->assertEqual($expected, $result);
-
-		$result = $this->db->fields($Article, null, array('this_moment', 'title'));
-		$expected = array(
-			'`Article`.`title`',
-			'(NOW()) AS  `Article__this_moment`',
-		);
-		$this->assertEqual($expected, $result);
-
-		$result = $this->db->fields($Article, null, array('Article.title', 'Article.this_moment'));
-		$expected = array(
-			'`Article`.`title`',
-			'(NOW()) AS  `Article__this_moment`',
-		);
-		$this->assertEqual($expected, $result);
-
-		$result = $this->db->fields($Article, null, array('Article.this_moment', 'Article.title'));
-		$expected = array(
-			'`Article`.`title`',
-			'(NOW()) AS  `Article__this_moment`',
-		);
-		$this->assertEqual($expected, $result);
-
-		$result = $this->db->fields($Article, null, array('Article.*'));
-		$expected = array(
-			'`Article`.*',
-			'(NOW()) AS  `Article__this_moment`',
-			'(1 + 1) AS  `Article__two`',
-			'(SELECT COUNT(*) FROM comments WHERE `Article`.`id` = `comments`.`article_id`) AS  `Article__comment_count`'
-		);
-		$this->assertEqual($expected, $result);
-
-		$result = $this->db->fields($Article, null, array('*'));
-		$expected = array(
-			'*',
-			'(NOW()) AS  `Article__this_moment`',
-			'(1 + 1) AS  `Article__two`',
-			'(SELECT COUNT(*) FROM comments WHERE `Article`.`id` = `comments`.`article_id`) AS  `Article__comment_count`'
-		);
-		$this->assertEqual($expected, $result);
-	}
-
-/**
- * test conditions to generate query conditions for virtual fields
- *
- * @return void
- */
-	function testVirtualFieldsInConditions() {
-		$Article =& ClassRegistry::init('Article');
-		$Article->virtualFields = array(
-			'this_moment' => 'NOW()',
-			'two' => '1 + 1',
-			'comment_count' => 'SELECT COUNT(*) FROM ' . $this->db->fullTableName('comments') .
-				' WHERE Article.id = ' . $this->db->fullTableName('comments') . '.article_id'
-		);
-		$conditions = array('two' => 2);
-		$result = $this->db->conditions($conditions, true, false, $Article);
-		$expected = '(1 + 1) = 2';
-		$this->assertEqual($expected, $result);
-
-		$conditions = array('this_moment BETWEEN ? AND ?' => array(1,2));
-		$expected = 'NOW() BETWEEN 1 AND 2';
-		$result = $this->db->conditions($conditions, true, false, $Article);
-		$this->assertEqual($expected, $result);
-
-		$conditions = array('comment_count >' => 5);
-		$expected = '(SELECT COUNT(*) FROM comments WHERE `Article`.`id` = `comments`.`article_id`) > 5';
-		$result = $this->db->conditions($conditions, true, false, $Article);
-		$this->assertEqual($expected, $result);
-
-		$conditions = array('NOT' => array('two' => 2));
-		$result = $this->db->conditions($conditions, true, false, $Article);
-		$expected = 'NOT ((1 + 1) = 2)';
-		$this->assertEqual($expected, $result);
-	}
-
-/**
- * test that virtualFields with complex functions and aliases work.
- *
- * @return void
- */
-	function testConditionsWithComplexVirtualFields() {
-		$Article =& ClassRegistry::init('Article');
-		$Article->virtualFields = array(
-			'distance' => 'ACOS(SIN(20 * PI() / 180)
-					* SIN(Article.latitude * PI() / 180)
-					+ COS(20 * PI() / 180)
-					* COS(Article.latitude * PI() / 180)
-					* COS((50 - Article.longitude) * PI() / 180)
-				) * 180 / PI() * 60 * 1.1515 * 1.609344'
-		);
-		$conditions = array('distance >=' => 20);
-		$result = $this->db->conditions($conditions, true, true, $Article);
-
-		$this->assertPattern('/\) >= 20/', $result);
-		$this->assertPattern('/[`\'"]Article[`\'"].[`\'"]latitude[`\'"]/', $result);
-		$this->assertPattern('/[`\'"]Article[`\'"].[`\'"]longitude[`\'"]/', $result);
-	}
-
-/**
- * test order to generate query order clause for virtual fields
- *
- * @return void
- */
-	function testVirtualFieldsInOrder() {
-		$Article =& ClassRegistry::init('Article');
-		$Article->virtualFields = array(
-			'this_moment' => 'NOW()',
-			'two' => '1 + 1',
-		);
-		$order = array('two', 'this_moment');
-		$result = $this->db->order($order, 'ASC', $Article);
-		$expected = ' ORDER BY (1 + 1) ASC, (NOW()) ASC';
-		$this->assertEqual($expected, $result);
-
-		$order = array('Article.two', 'Article.this_moment');
-		$result = $this->db->order($order, 'ASC', $Article);
-		$expected = ' ORDER BY (1 + 1) ASC, (NOW()) ASC';
-		$this->assertEqual($expected, $result);
-	}
-
-/**
- * test calculate to generate claculate statements on virtual fields
- *
- * @return void
- */
-	function testVirtualFieldsInCalculate() {
-		$Article =& ClassRegistry::init('Article');
-		$Article->virtualFields = array(
-			'this_moment' => 'NOW()',
-			'two' => '1 + 1',
-			'comment_count' => 'SELECT COUNT(*) FROM ' . $this->db->fullTableName('comments') .
-				' WHERE Article.id = ' . $this->db->fullTableName('comments'). '.article_id'
-		);
-
-		$result = $this->db->calculate($Article, 'count', array('this_moment'));
-		$expected = 'COUNT(NOW()) AS `count`';
-		$this->assertEqual($expected, $result);
-
-		$result = $this->db->calculate($Article, 'max', array('comment_count'));
-		$expected = 'MAX(SELECT COUNT(*) FROM comments WHERE `Article`.`id` = `comments`.`article_id`) AS `comment_count`';
-		$this->assertEqual($expected, $result);
-	}
-
-/**
- * test a full example of using virtual fields
- *
- * @return void
- */
-	function testVirtualFieldsFetch() {
-		$this->loadFixtures('Article', 'Comment');
-
-		$Article =& ClassRegistry::init('Article');
-		$Article->virtualFields = array(
-			'comment_count' => 'SELECT COUNT(*) FROM ' . $this->db->fullTableName('comments') .
-				' WHERE Article.id = ' . $this->db->fullTableName('comments') . '.article_id'
-		);
-
-		$conditions = array('comment_count >' => 2);
-		$query = 'SELECT ' . join(',',$this->db->fields($Article, null, array('id', 'comment_count'))) .
-				' FROM ' .  $this->db->fullTableName($Article) . ' Article ' . $this->db->conditions($conditions, true, true, $Article);
-		$result = $this->db->fetchAll($query);
-		$expected = array(array(
-			'Article' => array('id' => 1, 'comment_count' => 4)
-		));
-		$this->assertEqual($expected, $result);
-	}
-
-/**
- * test reading complex virtualFields with subqueries.
- *
- * @return void
- */
-	function testVirtualFieldsComplexRead() {
-		$this->loadFixtures('DataTest', 'Article', 'Comment');
-		
-		$Article =& ClassRegistry::init('Article');
-		$commentTable = $this->db->fullTableName('comments');
-		$Article =& ClassRegistry::init('Article');
-		$Article->virtualFields = array(
-			'comment_count' => 'SELECT COUNT(*) FROM ' . $commentTable . 
-				' AS Comment WHERE Article.id = Comment.article_id'
-		);
-		$result = $Article->find('all');
-		$this->assertTrue(count($result) > 0);
-		$this->assertTrue($result[0]['Article']['comment_count'] > 0);
-
-		$DataTest =& ClassRegistry::init('DataTest');
-		$DataTest->virtualFields = array(
-			'complicated' => 'ACOS(SIN(20 * PI() / 180)
-				* SIN(DataTest.float * PI() / 180)
-				+ COS(20 * PI() / 180)
-				* COS(DataTest.count * PI() / 180)
-				* COS((50 - DataTest.float) * PI() / 180)
-				) * 180 / PI() * 60 * 1.1515 * 1.609344'
-		);
-		$result = $DataTest->find('all');
-		$this->assertTrue(count($result) > 0);
-		$this->assertTrue($result[0]['DataTest']['complicated'] > 0);
-	}
-
-/**
- * test that virtualFields with complex functions and aliases work.
- *
- * @return void
- */
-	function testFieldsWithComplexVirtualFields() {
-		$Article =& new Article();
-		$Article->virtualFields = array(
-			'distance' => 'ACOS(SIN(20 * PI() / 180)
-					* SIN(Article.latitude * PI() / 180)
-					+ COS(20 * PI() / 180)
-					* COS(Article.latitude * PI() / 180)
-					* COS((50 - Article.longitude) * PI() / 180)
-				) * 180 / PI() * 60 * 1.1515 * 1.609344'
-		);
-
-		$fields = array('id', 'distance');
-		$result = $this->db->fields($Article, null, $fields);
-		$qs = $this->db->startQuote;
-		$qe = $this->db->endQuote;
-
-		$this->assertEqual($result[0], "{$qs}Article{$qe}.{$qs}id{$qe}");
-		$this->assertPattern('/Article__distance/', $result[1]);
-		$this->assertPattern('/[`\'"]Article[`\'"].[`\'"]latitude[`\'"]/', $result[1]);
-		$this->assertPattern('/[`\'"]Article[`\'"].[`\'"]longitude[`\'"]/', $result[1]);
-	}
-
-/**
- * test reading virtual fields containing newlines when recursive > 0
- *
- * @return void
- */
-	function testReadVirtualFieldsWithNewLines() {
-		$Article =& new Article();
-		$Article->recursive = 1;
-		$Article->virtualFields = array(
-			'test' => '
-			User.id + User.id
-			'
-		);
-		$result = $this->db->fields($Article, null, array());
-		$result = $this->db->fields($Article, $Article->alias, $result);
-		$this->assertPattern('/[`\"]User[`\"]\.[`\"]id[`\"] \+ [`\"]User[`\"]\.[`\"]id[`\"]/', $result[7]);
-	}
-
-/**
- * test group to generate GROUP BY statements on virtual fields
- *
- * @return void
- */
-	function testVirtualFieldsInGroup() {
-		$Article =& ClassRegistry::init('Article');
-		$Article->virtualFields = array(
-			'this_year' => 'YEAR(Article.created)'
-		);
-
-		$result = $this->db->group('this_year',$Article);
-		$expected = " GROUP BY (YEAR(`Article`.`created`))";
-		$this->assertEqual($expected, $result);
-	}
-
-/**
- * test the permutations of fullTableName()
- *
- * @return void
- */
-	function testFullTablePermutations() {
-		$Article =& ClassRegistry::init('Article');
-		$result = $this->testDb->fullTableName($Article, false);
-		$this->assertEqual($result, 'articles');
-
-		$Article->tablePrefix = 'tbl_';
-		$result = $this->testDb->fullTableName($Article, false);
-		$this->assertEqual($result, 'tbl_articles');
-		
-		$Article->useTable = $Article->table = 'with spaces';
-		$Article->tablePrefix = '';
-		$result = $this->testDb->fullTableName($Article);
-		$this->assertEqual($result, '`with spaces`');
-	}
-
-/**
- * test that read() only calls queryAssociation on db objects when the method is defined.
- *
- * @return void
- */
-	function testReadOnlyCallingQueryAssociationWhenDefined() {
-		ConnectionManager::create('test_no_queryAssociation', array(
-			'datasource' => 'data'
-		));
-		$Article =& ClassRegistry::init('Article');
-		$Article->Comment->useDbConfig = 'test_no_queryAssociation';
-		$result = $Article->find('all');
-		$this->assertTrue(is_array($result));
-	}
-
-/**
- * test that fields() is using methodCache()
- *
- * @return void
- */
-	function testFieldsUsingMethodCache() {
-		$this->testDb->cacheMethods = false;
-		$this->assertTrue(empty($this->testDb->methodCache['fields']), 'Cache not empty');
-
-		$Article =& ClassRegistry::init('Article');
-		$this->testDb->fields($Article, null, array('title', 'body', 'published'));
-		$this->assertTrue(empty($this->testDb->methodCache['fields']), 'Cache not empty');
-	}
 }
+?>

@@ -1,21 +1,29 @@
 <?php
+/* SVN FILE: $Id$ */
+
 /**
  * ErrorHandler for Console Shells
  *
+ * Long description for file
+ *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) :  Rapid Development Framework (http://www.cakephp.org)
+ * Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @filesource
+ * @copyright     Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * @link          http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
  * @package       cake
  * @subpackage    cake.cake.console
  * @since         CakePHP(tm) v 1.2.0.5074
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @version       $Revision$
+ * @modifiedby    $LastChangedBy$
+ * @lastmodified  $Date$
+ * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 
 /**
@@ -51,7 +59,11 @@ class ErrorHandler extends Object {
 	function __construct($method, $messages) {
 		$this->stdout = fopen('php://stdout', 'w');
 		$this->stderr = fopen('php://stderr', 'w');
-		call_user_func_array(array(&$this, $method), $messages);
+		if (Configure::read() > 0 || $method == 'error') {
+			call_user_func_array(array(&$this, $method), $messages);
+		} else {
+			call_user_func_array(array(&$this, 'error404'), $messages);
+		}
 	}
 
 /**
@@ -74,11 +86,9 @@ class ErrorHandler extends Object {
  */
 	function error404($params) {
 		extract($params, EXTR_OVERWRITE);
-		$this->error(array(
-			'code' => '404',
-			'name' => 'Not found',
-			'message' => sprintf(__("The requested address %s was not found on this server.", true), $url, $message)
-		));
+		$this->error(array('code' => '404',
+							'name' => 'Not found',
+							'message' => sprintf(__("The requested address %s was not found on this server.", true), $url, $message)));
 		$this->_stop();
 	}
 
@@ -263,3 +273,4 @@ class ErrorHandler extends Object {
 		fwrite($this->stderr, "Error: ". $string . "\n");
 	}
 }
+?>

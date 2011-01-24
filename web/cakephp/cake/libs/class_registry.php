@@ -1,4 +1,6 @@
 <?php
+/* SVN FILE: $Id$ */
+
 /**
  * Class collections.
  *
@@ -6,18 +8,22 @@
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) :  Rapid Development Framework (http://www.cakephp.org)
+ * Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @filesource
+ * @copyright     Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * @link          http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
  * @package       cake
  * @subpackage    cake.cake.libs
  * @since         CakePHP(tm) v 0.9.2
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @version       $Revision$
+ * @modifiedby    $LastChangedBy$
+ * @lastmodified  $Date$
+ * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 
 /**
@@ -118,12 +124,12 @@ class ClassRegistry {
 
 		foreach ($objects as $key => $settings) {
 			if (is_array($settings)) {
-				$pluginPath = null;
+				$plugin = $pluginPath = null;
 				$settings = array_merge($defaults, $settings);
 				$class = $settings['class'];
-				
-				list($plugin, $class) = pluginSplit($class);
-				if ($plugin) {
+
+				if (strpos($class, '.') !== false) {
+					list($plugin, $class) = explode('.', $class);
 					$pluginPath = $plugin . '.';
 				}
 
@@ -241,7 +247,7 @@ class ClassRegistry {
  * Return object which corresponds to given key.
  *
  * @param string $key Key of object to look for
- * @return mixed Object stored in registry or boolean false if the object does not exist.
+ * @return mixed Object stored in registry
  * @access public
  * @static
  */
@@ -362,3 +368,4 @@ class ClassRegistry {
 		$_this->__map = array();
 	}
 }
+?>

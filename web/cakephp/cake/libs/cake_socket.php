@@ -1,21 +1,27 @@
 <?php
+/* SVN FILE: $Id$ */
+
 /**
  * Cake Socket connection class.
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) :  Rapid Development Framework (http://www.cakephp.org)
+ * Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @filesource
+ * @copyright     Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * @link          http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
  * @package       cake
  * @subpackage    cake.cake.libs
  * @since         CakePHP(tm) v 1.2.0
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @version       $Revision$
+ * @modifiedby    $LastChangedBy$
+ * @lastmodified  $Date$
+ * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 App::import('Core', 'Validation');
 
@@ -87,7 +93,6 @@ class CakeSocket extends Object {
  * Constructor.
  *
  * @param array $config Socket configuration, which will be merged with the base configuration
- * @see CakeSocket::$_baseConfig
  */
 	function __construct($config = array()) {
 		parent::__construct();
@@ -182,7 +187,7 @@ class CakeSocket extends Object {
  */
 	function lastError() {
 		if (!empty($this->lastError)) {
-			return $this->lastError['num'] . ': ' . $this->lastError['str'];
+			return $this->lastError['num'].': '.$this->lastError['str'];
 		} else {
 			return null;
 		}
@@ -302,3 +307,4 @@ class CakeSocket extends Object {
 		return true;
 	}
 }
+?>

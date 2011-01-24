@@ -7,13 +7,13 @@
  * PHP versions 4 and 5
  *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * Copyright 2005-2009, Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright 2005-2009, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link          http://cakephp.org
  * @package       cake
  * @subpackage    cake.console.libs.templates.objects
  * @since         CakePHP(tm) v 1.3
@@ -42,28 +42,16 @@ if (!empty($validate)):
 	foreach ($validate as $field => $validations):
 		echo "\t\t'$field' => array(\n";
 		foreach ($validations as $key => $validator):
-			echo "\t\t\t'$key' => array(\n";
-			echo "\t\t\t\t'rule' => array('$validator'),\n";
-			echo "\t\t\t\t//'message' => 'Your custom message here',\n";
-			echo "\t\t\t\t//'allowEmpty' => false,\n";
-			echo "\t\t\t\t//'required' => false,\n";
-			echo "\t\t\t\t//'last' => false, // Stop validation after this rule\n";
-			echo "\t\t\t\t//'on' => 'create', // Limit validation to 'create' or 'update' operations\n";
-			echo "\t\t\t),\n";
+			echo "\t\t\t'$key' => array('rule' => array('$validator')),\n";
 		endforeach;
 		echo "\t\t),\n";
 	endforeach;
 	echo "\t);\n";
 endif;
 
-foreach ($associations as $assoc):
-	if (!empty($assoc)):
 ?>
 	//The Associations below have been created with all possible keys, those that are not needed can be removed
 <?php
-		break;
-	endif;
-endforeach;
 
 foreach (array('hasOne', 'belongsTo') as $assocType):
 	if (!empty($associations[$assocType])):

@@ -2,20 +2,23 @@
 /**
  * The DbConfig Task handles creating and updating the database.php
  *
+ * Long description for file
+ *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) :  Rapid Development Framework (http://www.cakephp.org)
+ * Copyright 2005-2009, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @filesource
+ * @copyright     Copyright 2005-2009, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * @link          http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
  * @package       cake
  * @subpackage    cake.cake.console.libs.tasks
  * @since         CakePHP(tm) v 1.2
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 
 /**
@@ -51,7 +54,7 @@ class DbConfigTask extends Shell {
  * Used for testing.
  *
  * @var string
- */
+ **/
 	var $databaseClassName = 'DATABASE_CONFIG';
 
 /**
@@ -105,7 +108,7 @@ class DbConfigTask extends Shell {
 			$driver = $this->in('Driver:', array('db2', 'firebird', 'mssql', 'mysql', 'mysqli', 'odbc', 'oracle', 'postgres', 'sqlite', 'sybase'), 'mysql');
 
 			$persistent = $this->in('Persistent Connection?', array('y', 'n'), 'n');
-			if (strtolower($persistent) == 'n') {
+			if (low($persistent) == 'n') {
 				$persistent = 'false';
 			} else {
 				$persistent = 'true';
@@ -121,7 +124,7 @@ class DbConfigTask extends Shell {
 				$port = $this->in('Port?', null, 'n');
 			}
 
-			if (strtolower($port) == 'n') {
+			if (low($port) == 'n') {
 				$port = null;
 			}
 
@@ -152,7 +155,7 @@ class DbConfigTask extends Shell {
 			while ($prefix == '') {
 				$prefix = $this->in('Table Prefix?', null, 'n');
 			}
-			if (strtolower($prefix) == 'n') {
+			if (low($prefix) == 'n') {
 				$prefix = null;
 			}
 
@@ -160,7 +163,7 @@ class DbConfigTask extends Shell {
 			while ($encoding == '') {
 				$encoding = $this->in('Table encoding?', null, 'n');
 			}
-			if (strtolower($encoding) == 'n') {
+			if (low($encoding) == 'n') {
 				$encoding = null;
 			}
 
@@ -170,7 +173,7 @@ class DbConfigTask extends Shell {
 					$schema = $this->in('Table schema?', null, 'n');
 				}
 			}
-			if (strtolower($schema) == 'n') {
+			if (low($schema) == 'n') {
 				$schema = null;
 			}
 
@@ -182,7 +185,7 @@ class DbConfigTask extends Shell {
 			$dbConfigs[] = $config;
 			$doneYet = $this->in('Do you wish to add another database configuration?', null, 'n');
 
-			if (strtolower($doneYet == 'n')) {
+			if (low($doneYet == 'n')) {
 				$done = true;
 			}
 		}
@@ -201,7 +204,7 @@ class DbConfigTask extends Shell {
 	function __verify($config) {
 		$config = array_merge($this->__defaultConfig, $config);
 		extract($config);
-		$this->out();
+		$this->out('');
 		$this->hr();
 		$this->out('The following database configuration will be created:');
 		$this->hr();
@@ -256,7 +259,6 @@ class DbConfigTask extends Shell {
 		$oldConfigs = array();
 
 		if (file_exists($filename)) {
-			config('database');
 			$db = new $this->databaseClassName;
 			$temp = get_class_vars(get_class($db));
 
@@ -349,12 +351,11 @@ class DbConfigTask extends Shell {
  * Get a user specified Connection name
  *
  * @return void
- */
+ **/
 	function getConfig() {
-		App::import('Model', 'ConnectionManager', false);
-
 		$useDbConfig = 'default';
 		$configs = get_class_vars($this->databaseClassName);
+
 		if (!is_array($configs)) {
 			return $this->execute();
 		}
@@ -366,3 +367,4 @@ class DbConfigTask extends Shell {
 		return $useDbConfig;
 	}
 }
+?>

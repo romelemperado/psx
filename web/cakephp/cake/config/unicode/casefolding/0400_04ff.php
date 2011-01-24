@@ -1,4 +1,6 @@
 <?php
+/* SVN FILE: $Id$ */
+
 /**
  * Case Folding Properties.
  *
@@ -10,18 +12,22 @@
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) :  Rapid Development Framework (http://www.cakephp.org)
+ * Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @filesource
+ * @copyright     Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * @link          http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
  * @package       cake
  * @subpackage    cake.cake.config.unicode.casefolding
  * @since         CakePHP(tm) v 1.2.0.5691
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @version       $Revision$
+ * @modifiedby    $LastChangedBy$
+ * @lastmodified  $Date$
+ * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 
 /**
@@ -163,3 +169,4 @@ $config['0400_04ff'][] = array('upper' => 1272, 'status' => 'C', 'lower' => arra
 $config['0400_04ff'][] = array('upper' => 1274, 'status' => 'C', 'lower' => array(1275)); /* CYRILLIC CAPITAL LETTER GHE WITH STROKE AND HOOK */
 $config['0400_04ff'][] = array('upper' => 1276, 'status' => 'C', 'lower' => array(1277)); /* CYRILLIC CAPITAL LETTER HA WITH HOOK */
 $config['0400_04ff'][] = array('upper' => 1278, 'status' => 'C', 'lower' => array(1279)); /* CYRILLIC CAPITAL LETTER HA WITH STROKE */
+?>

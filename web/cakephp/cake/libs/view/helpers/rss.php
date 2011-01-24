@@ -1,21 +1,27 @@
 <?php
+/* SVN FILE: $Id$ */
+
 /**
  * RSS Helper class file.
  *
  * Simplifies the output of RSS feeds.
  *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) :  Rapid Development Framework (http://www.cakephp.org)
+ * Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @filesource
+ * @copyright     Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * @link          http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
  * @package       cake
  * @subpackage    cake.cake.libs.view.helpers
  * @since         CakePHP(tm) v 1.2
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @version       $Revision$
+ * @modifiedby    $LastChangedBy$
+ * @lastmodified  $Date$
+ * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 App::import('Helper', 'Xml');
 
@@ -26,7 +32,6 @@ App::import('Helper', 'Xml');
  *
  * @package       cake
  * @subpackage    cake.cake.libs.view.helpers
- * @link http://book.cakephp.org/view/1460/RSS
  */
 class RssHelper extends XmlHelper {
 
@@ -35,7 +40,7 @@ class RssHelper extends XmlHelper {
  *
  * @var array
  * @access public
- */
+ **/
 	var $helpers = array('Time');
 
 /**
@@ -103,11 +108,10 @@ class RssHelper extends XmlHelper {
 	var $version = '2.0';
 
 /**
- * Returns an RSS document wrapped in `<rss />` tags
+ * Returns an RSS document wrapped in <rss /> tags
  *
- * @param array $attrib `<rss />` tag attributes
+ * @param  array  $attrib <rss /> tag attributes
  * @return string An RSS document
- * @access public
  */
 	function document($attrib = array(), $content = null) {
 		if ($content === null) {
@@ -122,13 +126,12 @@ class RssHelper extends XmlHelper {
 	}
 
 /**
- * Returns an RSS `<channel />` element
+ * Returns an RSS <channel /> element
  *
- * @param array $attrib `<channel />` tag attributes
- * @param mixed $elements Named array elements which are converted to tags
- * @param mixed $content Content (`<item />`'s belonging to this channel
- * @return string An RSS `<channel />`
- * @access public
+ * @param  array  $attrib   <channel /> tag attributes
+ * @param  mixed  $elements Named array elements which are converted to tags
+ * @param  mixed  $content  Content (<item />'s belonging to this channel
+ * @return string An RSS <channel />
  */
 	function channel($attrib = array(), $elements = array(), $content = null) {
 		$view =& ClassRegistry::getObject('view');
@@ -169,13 +172,12 @@ class RssHelper extends XmlHelper {
 
 /**
  * Transforms an array of data using an optional callback, and maps it to a set
- * of `<item />` tags
+ * of <item /> tags
  *
- * @param array $items The list of items to be mapped
- * @param mixed $callback A string function name, or array containing an object
- *     and a string method name
- * @return string A set of RSS `<item />` elements
- * @access public
+ * @param  array  $items    The list of items to be mapped
+ * @param  mixed  $callback A string function name, or array containing an object
+ *                          and a string method name
+ * @return string A set of RSS <item /> elements
  */
 	function items($items, $callback = null) {
 		if ($callback != null) {
@@ -192,12 +194,11 @@ class RssHelper extends XmlHelper {
 	}
 
 /**
- * Converts an array into an `<item />` element and its contents
+ * Converts an array into an <item /> element and its contents
  *
- * @param array $attrib The attributes of the `<item />` element
- * @param array $elements The list of elements contained in this `<item />`
- * @return string An RSS `<item />` element
- * @access public
+ * @param  array  $attrib      The attributes of the <item /> element
+ * @param  array  $elements    The list of elements contained in this <item />
+ * @return string An RSS <item /> element
  */
 	function item($att = array(), $elements = array()) {
 		$content = null;
@@ -208,13 +209,6 @@ class RssHelper extends XmlHelper {
 
 		foreach ($elements as $key => $val) {
 			$attrib = array();
-			
-			$escape = true;
-			if (is_array($val) && isset($val['convertEntities'])) {
-				$escape = $val['convertEntities'];
-				unset($val['convertEntities']);
-			}
-			
 			switch ($key) {
 				case 'pubDate' :
 					$val = $this->time($val);
@@ -229,7 +223,7 @@ class RssHelper extends XmlHelper {
 							}
 							$categories[] = $this->elem($key, $attrib, $category);
 						}
-						$elements[$key] = implode('', $categories);
+						$elements[$key] = join('', $categories);
 						continue 2;
 					} else if (is_array($val) && isset($val['domain'])) {
 						$attrib['domain'] = $val['domain'];
@@ -268,21 +262,26 @@ class RssHelper extends XmlHelper {
 					$val = null;
 				break;
 			}
+			$escape = true;
+			if (is_array($val) && isset($val['convertEntities'])) {
+				$escape = $val['convertEntities'];
+				unset($val['convertEntities']);
+			}
 			if (!is_null($val) && $escape) {
 				$val = h($val);
 			}
 			$elements[$key] = $this->elem($key, $attrib, $val);
 		}
 		if (!empty($elements)) {
-			$content = implode('', $elements);
+			$content = join('', $elements);
 		}
-		return $this->elem('item', $att, $content, !($content === null));
+		return $this->output($this->elem('item', $att, $content, !($content === null)));
 	}
 
 /**
  * Converts a time in any format to an RSS time
  *
- * @param mixed $time
+ * @param  mixed  $time
  * @return string An RSS-formatted timestamp
  * @see TimeHelper::toRSS
  */
@@ -290,3 +289,4 @@ class RssHelper extends XmlHelper {
 		return $this->Time->toRSS($time);
 	}
 }
+?>

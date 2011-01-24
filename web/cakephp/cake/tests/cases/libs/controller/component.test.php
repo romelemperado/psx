@@ -1,20 +1,28 @@
 <?php
+/* SVN FILE: $Id$ */
+
 /**
  * ComponentTest file
  *
+ * Long description for file
+ *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) Tests <http://book.cakephp.org/view/1196/Testing>
- * Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) Tests <https://trac.cakephp.org/wiki/Developement/TestSuite>
+ * Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
  *
  *  Licensed under The Open Group Test Suite License
  *  Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://book.cakephp.org/view/1196/Testing CakePHP(tm) Tests
+ * @filesource
+ * @copyright     Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * @link          https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
  * @package       cake
  * @subpackage    cake.tests.cases.libs.controller
  * @since         CakePHP(tm) v 1.2.0.5436
+ * @version       $Revision$
+ * @modifiedby    $LastChangedBy$
+ * @lastmodified  $Date$
  * @license       http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
  */
 App::import('Controller', 'Controller', false);
@@ -290,8 +298,6 @@ class SomethingWithEmailComponent extends Object {
 	var $components = array('Email');
 }
 
-Mock::generate('Object', 'ComponentMockComponent', array('startup', 'beforeFilter', 'beforeRender', 'other'));
-
 /**
  * ComponentTest class
  *
@@ -383,7 +389,6 @@ class ComponentTest extends CakeTestCase {
 	function testNestedComponentLoading() {
 		$Controller =& new ComponentTestController();
 		$Controller->components = array('Apple');
-		$Controller->uses = false;
 		$Controller->constructClasses();
 		$Controller->Component->initialize($Controller);
 
@@ -404,7 +409,6 @@ class ComponentTest extends CakeTestCase {
 	function testComponentStartup() {
 		$Controller =& new ComponentTestController();
 		$Controller->components = array('Apple');
-		$Controller->uses = false;
 		$Controller->constructClasses();
 		$Controller->Component->initialize($Controller);
 		$Controller->beforeFilter();
@@ -419,32 +423,12 @@ class ComponentTest extends CakeTestCase {
 	}
 
 /**
- * test that triggerCallbacks fires methods on all the components, and can trigger any method.
- *
- * @return void
- */
-	function testTriggerCallback() {
-		$Controller =& new ComponentTestController();
-		$Controller->components = array('ComponentMock');
-		$Controller->uses = null;
-		$Controller->constructClasses();
-
-		$Controller->ComponentMock->expectOnce('beforeRender');
-		$Controller->Component->triggerCallback('beforeRender', $Controller);
-
-		$Controller->ComponentMock->expectNever('beforeFilter');
-		$Controller->ComponentMock->enabled = false;
-		$Controller->Component->triggerCallback('beforeFilter', $Controller);
-	}
-
-/**
  * test a component being used more than once.
  *
  * @return void
  */
 	function testMultipleComponentInitialize() {
 		$Controller =& new ComponentTestController();
-		$Controller->uses = false;
 		$Controller->components = array('Orange', 'Banana');
 		$Controller->constructClasses();
 		$Controller->Component->initialize($Controller);
@@ -466,14 +450,14 @@ class ComponentTest extends CakeTestCase {
 
 		$Controller =& new ComponentTestController();
 		$Controller->components = array('ParamTest' => array('test' => 'value', 'flag'), 'Apple');
-		$Controller->uses = false;
+
 		$Controller->constructClasses();
 		$Controller->Component->initialize($Controller);
 
 		$this->assertTrue(is_a($Controller->ParamTest, 'ParamTestComponent'));
 		$this->assertTrue(is_a($Controller->ParamTest->Banana, 'BananaComponent'));
 		$this->assertTrue(is_a($Controller->Orange, 'OrangeComponent'));
-		$this->assertFalse(isset($Controller->Session));
+		$this->assertTrue(is_a($Controller->Session, 'SessionComponent'));
 		$this->assertEqual($Controller->Orange->settings, array('colour' => 'blood orange'));
 		$this->assertEqual($Controller->ParamTest->test, 'value');
 		$this->assertEqual($Controller->ParamTest->flag, true);
@@ -496,14 +480,10 @@ class ComponentTest extends CakeTestCase {
  * Ensure that settings are not duplicated when passed into component initialize.
  *
  * @return void
- */
+ **/
 	function testComponentParamsNoDuplication() {
-		if ($this->skipIf(defined('APP_CONTROLLER_EXISTS'), '%s Need a non-existent AppController')) {
-			return;
-		}
 		$Controller =& new ComponentTestController();
 		$Controller->components = array('Orange' => array('setting' => array('itemx')));
-		$Controller->uses = false;
 
 		$Controller->constructClasses();
 		$Controller->Component->initialize($Controller);
@@ -519,7 +499,6 @@ class ComponentTest extends CakeTestCase {
 	function testMutuallyReferencingComponents() {
 		$Controller =& new ComponentTestController();
 		$Controller->components = array('MutuallyReferencingOne');
-		$Controller->uses = false;
 		$Controller->constructClasses();
 		$Controller->Component->initialize($Controller);
 
@@ -545,7 +524,6 @@ class ComponentTest extends CakeTestCase {
 	function testSomethingReferencingEmailComponent() {
 		$Controller =& new ComponentTestController();
 		$Controller->components = array('SomethingWithEmail');
-		$Controller->uses = false;
 		$Controller->constructClasses();
 		$Controller->Component->initialize($Controller);
 		$Controller->beforeFilter();
@@ -572,16 +550,14 @@ class ComponentTest extends CakeTestCase {
  * @access public
  */
 	function testDoubleLoadingOfSessionComponent() {
-		if ($this->skipIf(defined('APP_CONTROLLER_EXISTS'), '%s Need a non-existent AppController')) {
-			return;
-		}
+		$this->skipIf(defined('APP_CONTROLLER_EXISTS'), '%s Need a non-existent AppController');
 
 		$Controller =& new ComponentTestController();
-		$Controller->uses = false;
+		$Controller->uses = array();
 		$Controller->components = array('Session');
 		$Controller->constructClasses();
 
 		$this->assertEqual($Controller->components, array('Session' => '', 'Orange' => array('colour' => 'blood orange')));
 	}
-
 }
+?>

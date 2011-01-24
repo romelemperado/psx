@@ -1,27 +1,30 @@
 <?php
+/* SVN FILE: $Id$ */
+
 /**
  * File Storage engine for cache
  *
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) :  Rapid Development Framework (http://www.cakephp.org)
+ * Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @filesource
+ * @copyright     Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * @link          http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
  * @package       cake
  * @subpackage    cake.cake.libs.cache
  * @since         CakePHP(tm) v 1.2.0.4933
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @version       $Revision$
+ * @modifiedby    $LastChangedBy$
+ * @lastmodified  $Date$
+ * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 
-if (!class_exists('File')) {
-	require LIBS . 'file.php';
-}
 /**
  * File Storage engine for cache
  *
@@ -35,17 +38,16 @@ class FileEngine extends CacheEngine {
  * Instance of File class
  *
  * @var File
- * @access protected
+ * @access private
  */
-	var $_File = null;
+	var $__File = null;
 
 /**
- * Settings
- * 
- * - path = absolute path to cache directory, default => CACHE
- * - prefix = string prefix for filename, default => cake_
- * - lock = enable file locking on write, default => false
- * - serialize = serialize the data, default => true
+ * settings
+ * 		path = absolute path to cache directory, default => CACHE
+ * 		prefix = string prefix for filename, default => cake_
+ * 		lock = enable file locking on write, default => false
+ * 		serialize = serialize the data, default => true
  *
  * @var array
  * @see CacheEngine::__defaults
@@ -54,12 +56,20 @@ class FileEngine extends CacheEngine {
 	var $settings = array();
 
 /**
+ * Set to true if FileEngine::init(); and FileEngine::__active(); do not fail.
+ *
+ * @var boolean
+ * @access private
+ */
+	var $__active = false;
+
+/**
  * True unless FileEngine::__active(); fails
  *
  * @var boolean
- * @access protected
+ * @access private
  */
-	var $_init = true;
+	var $__init = true;
 
 /**
  * Initialize the Cache Engine
@@ -79,17 +89,20 @@ class FileEngine extends CacheEngine {
 			),
 			$settings
 		));
-		if (!isset($this->_File)) {
-			$this->_File =& new File($this->settings['path'] . DS . 'cake');
+		if (!isset($this->__File)) {
+			if (!class_exists('File')) {
+				require LIBS . 'file.php';
+			}
+			$this->__File =& new File($this->settings['path'] . DS . 'cake');
 		}
 
 		if (DIRECTORY_SEPARATOR === '\\') {
 			$this->settings['isWindows'] = true;
 		}
 
-		$path = $this->_File->Folder->cd($this->settings['path']);
-		if ($path) {
-			$this->settings['path'] = $path;
+		$this->settings['path'] = $this->__File->Folder->cd($this->settings['path']);
+		if (empty($this->settings['path'])) {
+			return false;
 		}
 		return $this->__active();
 	}
@@ -114,11 +127,11 @@ class FileEngine extends CacheEngine {
  * @access public
  */
 	function write($key, &$data, $duration) {
-		if ($data === '' || !$this->_init) {
+		if ($data === '' || !$this->__init) {
 			return false;
 		}
 
-		if ($this->_setKey($key) === false) {
+		if ($this->__setKey($key) === false) {
 			return false;
 		}
 
@@ -137,12 +150,12 @@ class FileEngine extends CacheEngine {
 		}
 
 		if ($this->settings['lock']) {
-			$this->_File->lock = true;
+			$this->__File->lock = true;
 		}
 		$expires = time() + $duration;
 		$contents = $expires . $lineBreak . $data . $lineBreak;
-		$success = $this->_File->write($contents);
-		$this->_File->close();
+		$success = $this->__File->write($contents);
+		$this->__File->close();
 		return $success;
 	}
 
@@ -154,20 +167,20 @@ class FileEngine extends CacheEngine {
  * @access public
  */
 	function read($key) {
-		if ($this->_setKey($key) === false || !$this->_init || !$this->_File->exists()) {
+		if ($this->__setKey($key) === false || !$this->__init || !$this->__File->exists()) {
 			return false;
 		}
 		if ($this->settings['lock']) {
-			$this->_File->lock = true;
+			$this->__File->lock = true;
 		}
 		$time = time();
-		$cachetime = intval($this->_File->read(11));
+		$cachetime = intval($this->__File->read(11));
 
 		if ($cachetime !== false && ($cachetime < $time || ($time + $this->settings['duration']) < $cachetime)) {
-			$this->_File->close();
+			$this->__File->close();
 			return false;
 		}
-		$data = $this->_File->read(true);
+		$data = $this->__File->read(true);
 
 		if ($data !== '' && !empty($this->settings['serialize'])) {
 			if ($this->settings['isWindows']) {
@@ -175,7 +188,7 @@ class FileEngine extends CacheEngine {
 			}
 			$data = unserialize((string)$data);
 		}
-		$this->_File->close();
+		$this->__File->close();
 		return $data;
 	}
 
@@ -187,10 +200,10 @@ class FileEngine extends CacheEngine {
  * @access public
  */
 	function delete($key) {
-		if ($this->_setKey($key) === false || !$this->_init) {
+		if ($this->__setKey($key) === false || !$this->__init) {
 			return false;
 		}
-		return $this->_File->delete();
+		return $this->__File->delete();
 	}
 
 /**
@@ -201,7 +214,7 @@ class FileEngine extends CacheEngine {
  * @access public
  */
 	function clear($check) {
-		if (!$this->_init) {
+		if (!$this->__init) {
 			return false;
 		}
 		$dir = dir($this->settings['path']);
@@ -209,29 +222,25 @@ class FileEngine extends CacheEngine {
 			$now = time();
 			$threshold = $now - $this->settings['duration'];
 		}
-		$prefixLength = strlen($this->settings['prefix']);
 		while (($entry = $dir->read()) !== false) {
-			if (substr($entry, 0, $prefixLength) !== $this->settings['prefix']) {
-				continue;
-			}
-			if ($this->_setKey($entry) === false) {
+			if ($this->__setKey($entry) === false) {
 				continue;
 			}
 			if ($check) {
-				$mtime = $this->_File->lastChange();
+				$mtime = $this->__File->lastChange();
 
 				if ($mtime === false || $mtime > $threshold) {
 					continue;
 				}
 
-				$expires = $this->_File->read(11);
-				$this->_File->close();
+				$expires = $this->__File->read(11);
+				$this->__File->close();
 
 				if ($expires > $now) {
 					continue;
 				}
 			}
-			$this->_File->delete();
+			$this->__File->delete();
 		}
 		$dir->close();
 		return true;
@@ -244,13 +253,13 @@ class FileEngine extends CacheEngine {
  * @return mixed Absolute cache file for the given key or false if erroneous
  * @access private
  */
-	function _setKey($key) {
-		$this->_File->Folder->cd($this->settings['path']);
-		if ($key !== $this->_File->name) {
-			$this->_File->name = $key;
-			$this->_File->path = null;
+	function __setKey($key) {
+		$this->__File->Folder->cd($this->settings['path']);
+		if ($key !== $this->__File->name) {
+			$this->__File->name = $key;
+			$this->__File->path = null;
 		}
-		if (!$this->_File->Folder->inPath($this->_File->pwd(), true)) {
+		if (!$this->__File->Folder->inPath($this->__File->pwd(), true)) {
 			return false;
 		}
 	}
@@ -262,11 +271,13 @@ class FileEngine extends CacheEngine {
  * @access private
  */
 	function __active() {
-		if ($this->_init && !is_writable($this->settings['path'])) {
-			$this->_init = false;
-			trigger_error(sprintf(__('%s is not writable', true), $this->settings['path']), E_USER_WARNING);
-			return false;
-		}
-		return true;
+		//if (!$this->__active && $this->__init && !is_writable($this->settings['path'])) {
+		//	$this->__init = false;
+		//	trigger_error(sprintf(__('%s is not writable', true), $this->settings['path']), E_USER_WARNING);
+		//} else {
+		//	$this->__active = true;
+		//}
+		//return true;
 	}
 }
+?>

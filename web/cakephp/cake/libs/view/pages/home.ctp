@@ -1,30 +1,36 @@
 <?php
+/* SVN FILE: $Id$ */
+
 /**
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) :  Rapid Development Framework (http://www.cakephp.org)
+ * Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @filesource
+ * @copyright     Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * @link          http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
  * @package       cake
  * @subpackage    cake.cake.libs.view.templates.pages
  * @since         CakePHP(tm) v 0.10.0.1076
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @version       $Revision$
+ * @modifiedby    $LastChangedBy$
+ * @lastmodified  $Date$
+ * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 if (Configure::read() == 0):
 	$this->cakeError('error404');
 endif;
 ?>
 <h2><?php echo sprintf(__('Release Notes for CakePHP %s.', true), Configure::version()); ?></h2>
-<a href="http://cakephp.org/changelogs/1.3.6"><?php __('Read the changelog'); ?> </a>
+<a href="https://trac.cakephp.org/wiki/changelog/1.2.x.x"><?php __('Read the changelog'); ?> </a>
 <?php
 if (Configure::read() > 0):
-	Debugger::checkSecurityKeys();
+	Debugger::checkSessionKey();
 endif;
 ?>
 <p>
@@ -45,7 +51,7 @@ endif;
 		$settings = Cache::settings();
 		if (!empty($settings)):
 			echo '<span class="notice success">';
-					printf(__('The %s is being used for caching. To change the config edit APP/config/core.php ', true), '<em>'. $settings['engine'] . 'Engine</em>');
+					echo sprintf(__('The %s is being used for caching. To change the config edit APP/config/core.php ', true), '<em>'. $settings['engine'] . 'Engine</em>');
 			echo '</span>';
 		else:
 			echo '<span class="notice">';
@@ -71,16 +77,6 @@ endif;
 		endif;
 	?>
 </p>
-<?php
-	App::import('Core', 'Validation');
-	if (!Validation::alphaNumeric('cakephp')) {
-		echo '<p><span class="notice">';
-		__('PCRE has not been compiled with Unicode support.');
-		echo '<br/>';
-		__('Recompile PCRE with Unicode support by adding <code>--enable-unicode-properties</code> when configuring');
-		echo '</span></p>';
-	}
-?>
 <?php
 if (isset($filePresent)):
 	if (!class_exists('ConnectionManager')) {
@@ -111,27 +107,13 @@ To change its layout, create: APP/views/layouts/default.ctp.<br />
 You can also add some CSS styles for your pages at: APP/webroot/css.');
 ?>
 </p>
-
 <h3><?php __('Getting Started'); ?></h3>
 <p>
-	<?php
-		echo $this->Html->link(
-			sprintf('<strong>%s</strong> %s', __('New', true), __('CakePHP 1.3 Docs', true)),
-			'http://book.cakephp.org/view/875/x1-3-Collection',
-			array('target' => '_blank', 'escape' => false)
-		);
-	?>
+	<a href="http://book.cakephp.org"><strong>new</strong> CakePHP 1.2 Docs</a>
 </p>
 <p>
-	<?php
-		echo $this->Html->link(
-			__('The 15 min Blog Tutorial', true),
-			'http://book.cakephp.org/view/1528/Blog',
-			array('target' => '_blank', 'escape' => false)
-		);
-	?>
+	<a href="http://book.cakephp.org/view/219/the-cakephp-blog-tutorial"><?php __('The 15 min Blog Tutorial'); ?></a><br />
 </p>
-
 <h3><?php __('More about Cake'); ?></h3>
 <p>
 <?php __('CakePHP is a rapid development framework for PHP which uses commonly known design patterns like Active Record, Association Data Mapping, Front Controller and MVC.'); ?>
@@ -139,9 +121,9 @@ You can also add some CSS styles for your pages at: APP/webroot/css.');
 <p>
 <?php __('Our primary goal is to provide a structured framework that enables PHP users at all levels to rapidly develop robust web applications, without any loss to flexibility.'); ?>
 </p>
-
+<br />
 <ul>
-	<li><a href="http://cakefoundation.org/"><?php __('Cake Software Foundation'); ?> </a>
+	<li><a href="http://www.cakefoundation.org/"><?php __('Cake Software Foundation'); ?> </a>
 	<ul><li><?php __('Promoting development related to CakePHP'); ?></li></ul></li>
 	<li><a href="http://www.cakephp.org"><?php __('CakePHP'); ?> </a>
 	<ul><li><?php __('The Rapid Development Framework'); ?></li></ul></li>
@@ -157,10 +139,8 @@ You can also add some CSS styles for your pages at: APP/webroot/css.');
 	<ul><li><?php __('Community mailing list'); ?></li></ul></li>
 	<li><a href="irc://irc.freenode.net/cakephp">irc.freenode.net #cakephp</a>
 	<ul><li><?php __('Live chat about CakePHP'); ?></li></ul></li>
-	<li><a href="http://github.com/cakephp/"><?php __('CakePHP Code'); ?> </a>
-	<ul><li><?php __('For the Development of CakePHP Git repository, Downloads'); ?></li></ul></li>
-	<li><a href="http://cakephp.lighthouseapp.com/"><?php __('CakePHP Lighthouse'); ?> </a>
-	<ul><li><?php __('CakePHP Tickets, Wiki pages, Roadmap'); ?></li></ul></li>
+	<li><a href="https://trac.cakephp.org/"><?php __('CakePHP Trac'); ?> </a>
+	<ul><li><?php __('For the Development of CakePHP (Tickets, SVN browser, Roadmap, Changelogs)'); ?></li></ul></li>
 	<li><a href="http://www.cakeforge.org"><?php __('CakeForge'); ?> </a>
 	<ul><li><?php __('Open Development for CakePHP'); ?></li></ul></li>
 	<li><a href="http://astore.amazon.com/cakesoftwaref-20/"><?php __('Book Store'); ?> </a>

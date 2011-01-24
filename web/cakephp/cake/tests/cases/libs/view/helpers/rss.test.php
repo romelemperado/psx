@@ -1,20 +1,28 @@
 <?php
+/* SVN FILE: $Id$ */
+
 /**
  * RssHelperTest file
  *
+ * Long description for file
+ *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) Tests <http://book.cakephp.org/view/1196/Testing>
- * Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) Tests <https://trac.cakephp.org/wiki/Developement/TestSuite>
+ * Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
  *
  *  Licensed under The Open Group Test Suite License
  *  Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://book.cakephp.org/view/1196/Testing CakePHP(tm) Tests
+ * @filesource
+ * @copyright     Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * @link          https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
  * @package       cake
  * @subpackage    cake.tests.cases.libs.view.helpers
  * @since         CakePHP(tm) v 1.2.0.4206
+ * @version       $Revision$
+ * @modifiedby    $LastChangedBy$
+ * @lastmodified  $Date$
  * @license       http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
  */
 App::import('Helper', array('Rss', 'Time'));
@@ -517,40 +525,6 @@ class RssHelperTest extends CakeTestCase {
 			'/item'
 		);
 		$this->assertTags($result, $expected);
-
-		$item = array(
-			'title' => 'Foo bar',
-			'link' => array(
-				'url' => 'http://example.com/foo?a=1&b=2',
-				'convertEntities' => false
-			),
-			'description' =>  array(
-				'value' => 'descriptive words',
-				'cdata' => true,
-			),
-			'pubDate' => '2008-05-31 12:00:00'
-		);
-		$result = $this->Rss->item(null, $item);
-		$expected = array(
-			'<item',
-			'<title',
-			'Foo bar',
-			'/title',
-			'<link',
-			'http://example.com/foo?a=1&amp;b=2',
-			'/link',
-			'<description',
-			'<![CDATA[descriptive words]]',
-			'/description',
-			'<pubDate',
-			date('r', strtotime('2008-05-31 12:00:00')),
-			'/pubDate',
-			'<guid',
-			'http://example.com/foo?a=1&amp;b=2',
-			'/guid',
-			'/item'
-		);
-		$this->assertTags($result, $expected);
 	}
 
 /**
@@ -591,3 +565,4 @@ class RssHelperTest extends CakeTestCase {
 		$this->assertTags($result, $expected);
 	}
 }
+?>

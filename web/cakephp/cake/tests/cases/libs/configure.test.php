@@ -1,4 +1,6 @@
 <?php
+/* SVN FILE: $Id$ */
+
 /**
  * ConfigureTest file
  *
@@ -6,17 +8,21 @@
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) Tests <http://book.cakephp.org/view/1196/Testing>
- * Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) Tests <https://trac.cakephp.org/wiki/Developement/TestSuite>
+ * Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
  *
  *  Licensed under The Open Group Test Suite License
  *  Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://book.cakephp.org/view/1196/Testing CakePHP(tm) Tests
+ * @filesource
+ * @copyright     Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * @link          https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
  * @package       cake
  * @subpackage    cake.tests.cases.libs
  * @since         CakePHP(tm) v 1.2.0.5432
+ * @version       $Revision$
+ * @modifiedby    $LastChangedBy$
+ * @lastmodified  $Date$
  * @license       http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
  */
 App::import('Core', 'Configure');
@@ -108,19 +114,16 @@ class ConfigureTest extends CakeTestCase {
  * @return void
  */
 	function testWrite() {
-		$writeResult = Configure::write('SomeName.someKey', 'myvalue');
-		$this->assertTrue($writeResult);
+		Configure::write('SomeName.someKey', 'myvalue');
 		$result = Configure::read('SomeName.someKey');
 		$this->assertEqual($result, 'myvalue');
 
-		$writeResult = Configure::write('SomeName.someKey', null);
-		$this->assertTrue($writeResult);
+		Configure::write('SomeName.someKey', null);
 		$result = Configure::read('SomeName.someKey');
 		$this->assertEqual($result, null);
 
 		$expected = array('One' => array('Two' => array('Three' => array('Four' => array('Five' => 'cool')))));
-		$writeResult = Configure::write('Key', $expected);
-		$this->assertTrue($writeResult);
+		Configure::write('Key', $expected);
 
 		$result = Configure::read('Key');
 		$this->assertEqual($expected, $result);
@@ -139,17 +142,15 @@ class ConfigureTest extends CakeTestCase {
  * testSetErrorReporting Level
  *
  * @return void
- */
+ **/
 	function testSetErrorReportingLevel() {
-		Configure::write('log', false);
-
 		Configure::write('debug', 0);
 		$result = ini_get('error_reporting');
 		$this->assertEqual($result, 0);
 
 		Configure::write('debug', 2);
 		$result = ini_get('error_reporting');
-		$this->assertEqual($result, E_ALL & ~E_DEPRECATED);
+		$this->assertEqual($result, E_ALL);
 
 		$result = ini_get('display_errors');
 		$this->assertEqual($result, 1);
@@ -157,33 +158,6 @@ class ConfigureTest extends CakeTestCase {
 		Configure::write('debug', 0);
 		$result = ini_get('error_reporting');
 		$this->assertEqual($result, 0);
-	}
-
-/**
- * test that log and debug configure values interact well.
- *
- * @return void
- */
-	function testInteractionOfDebugAndLog() {
-		Configure::write('log', false);
-
-		Configure::write('debug', 0);
-		$this->assertEqual(ini_get('error_reporting'), 0);
-		$this->assertEqual(ini_get('display_errors'), 0);
-
-		Configure::write('log', E_WARNING);
-		Configure::write('debug', 0);
-		$this->assertEqual(ini_get('error_reporting'), E_WARNING);
-		$this->assertEqual(ini_get('display_errors'), 0);
-
-		Configure::write('debug', 2);
-		$this->assertEqual(ini_get('error_reporting'), E_ALL & ~E_DEPRECATED);
-		$this->assertEqual(ini_get('display_errors'), 1);
-
-		Configure::write('debug', 0);
-		Configure::write('log', false);
-		$this->assertEqual(ini_get('error_reporting'), 0);
-		$this->assertEqual(ini_get('display_errors'), 0);
 	}
 
 /**
@@ -229,31 +203,7 @@ class ConfigureTest extends CakeTestCase {
 		$this->assertFalse($result);
 
 		$result = Configure::load('config');
-		$this->assertTrue($result);
-
-		$result = Configure::load('../../index');
-		$this->assertFalse($result);
-	}
-
-/**
- * testLoad method
- *
- * @access public
- * @return void
- */
-	function testLoadPlugin() {
-		App::build(array('plugins' => array(TEST_CAKE_CORE_INCLUDE_PATH . 'tests' . DS . 'test_app' . DS . 'plugins' . DS)), true);
-		$result = Configure::load('test_plugin.load');
-		$this->assertTrue($result);
-		$expected = '/test_app/plugins/test_plugin/config/load.php';
-		$config = Configure::read('plugin_load');
-		$this->assertEqual($config, $expected);
-
-		$result = Configure::load('test_plugin.more.load');
-		$this->assertTrue($result);
-		$expected = '/test_app/plugins/test_plugin/config/more.load.php';
-		$config = Configure::read('plugin_more_load');
-		$this->assertEqual($config, $expected);
+		$this->assertTrue($result === null);
 	}
 
 /**
@@ -265,20 +215,17 @@ class ConfigureTest extends CakeTestCase {
 	function testStoreAndLoad() {
 		Configure::write('Cache.disable', false);
 
-		$expected = array('data' => 'value with backslash \, \'singlequote\' and "doublequotes"');
+		$expected = array('data' => 'value');
 		Configure::store('SomeExample', 'test', $expected);
 
 		Configure::load('test');
 		$config = Configure::read('SomeExample');
 		$this->assertEqual($config, $expected);
 
-		$expected = array(
-			'data' => array('first' => 'value with backslash \, \'singlequote\' and "doublequotes"', 'second' => 'value2'),
-			'data2' => 'value'
-		);
-		Configure::store('AnotherExample', 'test_config', $expected);
+		$expected = array('data' => array('first' => 'value', 'second' => 'value2'));
+		Configure::store('AnotherExample', 'test.config', $expected);
 
-		Configure::load('test_config');
+		Configure::load('test.config');
 		$config = Configure::read('AnotherExample');
 		$this->assertEqual($config, $expected);
 	}
@@ -301,7 +248,7 @@ class ConfigureTest extends CakeTestCase {
  * @package       cake
  * @subpackage    cake.tests.cases.libs
  */
-class AppImportTest extends CakeTestCase {
+class AppImportTest extends UnitTestCase {
 
 /**
  * testBuild method
@@ -323,8 +270,8 @@ class AppImportTest extends CakeTestCase {
 		$new = App::path('models');
 
 		$expected = array(
-			'/path/to/models/',
 			APP . 'models' . DS,
+			'/path/to/models/',
 			APP,
 			ROOT . DS . LIBS . 'model' . DS
 		);
@@ -424,60 +371,6 @@ class AppImportTest extends CakeTestCase {
 
 		$result = App::objects('NonExistingType');
 		$this->assertFalse($result);
-
-		App::build(array(
-			'plugins' => array(
-				TEST_CAKE_CORE_INCLUDE_PATH . 'tests' . DS . 'test_app' . DS . 'libs' . DS
-			)
-		));
-		$result = App::objects('plugin', null, false);
-		$this->assertTrue(in_array('Cache', $result));
-		$this->assertTrue(in_array('Log', $result));
-
-		App::build();
-	}
-
-/**
- * test that pluginPath can find paths for plugins.
- *
- * @return void
- */
-	function testPluginPath() {
-		App::build(array(
-			'plugins' => array(TEST_CAKE_CORE_INCLUDE_PATH . 'tests' . DS . 'test_app' . DS . 'plugins' . DS)
-		));
-		$path = App::pluginPath('test_plugin');
-		$expected = TEST_CAKE_CORE_INCLUDE_PATH . 'tests' . DS . 'test_app' . DS . 'plugins' . DS . 'test_plugin' . DS;
-		$this->assertEqual($path, $expected);
-
-		$path = App::pluginPath('TestPlugin');
-		$expected = TEST_CAKE_CORE_INCLUDE_PATH . 'tests' . DS . 'test_app' . DS . 'plugins' . DS . 'test_plugin' . DS;
-		$this->assertEqual($path, $expected);
-
-		$path = App::pluginPath('TestPluginTwo');
-		$expected = TEST_CAKE_CORE_INCLUDE_PATH . 'tests' . DS . 'test_app' . DS . 'plugins' . DS . 'test_plugin_two' . DS;
-		$this->assertEqual($path, $expected);
-		App::build();
-	}
-
-/**
- * test that pluginPath can find paths for plugins.
- *
- * @return void
- */
-	function testThemePath() {
-		App::build(array(
-			'views' => array(TEST_CAKE_CORE_INCLUDE_PATH . 'tests' . DS . 'test_app' . DS . 'views' . DS)
-		));
-		$path = App::themePath('test_theme');
-		$expected = TEST_CAKE_CORE_INCLUDE_PATH . 'tests' . DS . 'test_app' . DS . 'views' . DS . 'themed' . DS . 'test_theme' . DS;
-		$this->assertEqual($path, $expected);
-
-		$path = App::themePath('TestTheme');
-		$expected = TEST_CAKE_CORE_INCLUDE_PATH . 'tests' . DS . 'test_app' . DS . 'views' . DS . 'themed' . DS . 'test_theme' . DS;
-		$this->assertEqual($path, $expected);
-
-		App::build();
 	}
 
 /**
@@ -492,26 +385,21 @@ class AppImportTest extends CakeTestCase {
 
 		$file = App::import('Model', 'Model', false);
 		$this->assertTrue($file);
-		$this->assertTrue(class_exists('Model'));
 
 		$file = App::import('Controller', 'Controller', false);
 		$this->assertTrue($file);
-		$this->assertTrue(class_exists('Controller'));
 
 		$file = App::import('Component', 'Component', false);
 		$this->assertTrue($file);
-		$this->assertTrue(class_exists('Component'));
 
 		$file = App::import('Shell', 'Shell', false);
 		$this->assertTrue($file);
-		$this->assertTrue(class_exists('Shell'));
 
 		$file = App::import('Model', 'SomeRandomModelThatDoesNotExist', false);
 		$this->assertFalse($file);
 
 		$file = App::import('Model', 'AppModel', false);
 		$this->assertTrue($file);
-		$this->assertTrue(class_exists('AppModel'));
 
 		$file = App::import('WrongType', null, true, array(), '');
 		$this->assertTrue($file);
@@ -544,7 +432,6 @@ class AppImportTest extends CakeTestCase {
 
 			$file = App::import('Controller', 'Pages');
 			$this->assertTrue($file);
-			$this->assertTrue(class_exists('PagesController'));
 
 			$classes = array_flip(get_declared_classes());
 
@@ -558,34 +445,18 @@ class AppImportTest extends CakeTestCase {
 
 			$file = App::import('Behavior', 'Containable');
 			$this->assertTrue($file);
-			$this->assertTrue(class_exists('ContainableBehavior'));
 
 			$file = App::import('Component', 'RequestHandler');
 			$this->assertTrue($file);
-			$this->assertTrue(class_exists('RequestHandlerComponent'));
 
 			$file = App::import('Helper', 'Form');
 			$this->assertTrue($file);
-			$this->assertTrue(class_exists('FormHelper'));
 
 			$file = App::import('Model', 'NonExistingModel');
 			$this->assertFalse($file);
-
-			$file = App::import('Datasource', 'DboSource');
-			$this->assertTrue($file);
-			$this->assertTrue(class_exists('DboSource'));
 		}
-		App::build();
-	}
 
-/**
- * test import() with plugins
- *
- * @return void
- */
-	function testPluginImporting() {
 		App::build(array(
-			'libs' => array(TEST_CAKE_CORE_INCLUDE_PATH . 'tests' . DS . 'test_app' . DS . 'libs' . DS),
 			'plugins' => array(TEST_CAKE_CORE_INCLUDE_PATH . 'tests' . DS . 'test_app' . DS . 'plugins' . DS)
 		));
 
@@ -594,48 +465,9 @@ class AppImportTest extends CakeTestCase {
 		$this->assertTrue(class_exists('TestPluginAppController'));
 		$this->assertTrue(class_exists('TestsController'));
 
-		$result = App::import('Lib', 'TestPlugin.TestPluginLibrary');
-		$this->assertTrue($result);
-		$this->assertTrue(class_exists('TestPluginLibrary'));
-
-		$result = App::import('Lib', 'Library');
-		$this->assertTrue($result);
-		$this->assertTrue(class_exists('Library'));
-
 		$result = App::import('Helper', 'TestPlugin.OtherHelper');
 		$this->assertTrue($result);
 		$this->assertTrue(class_exists('OtherHelperHelper'));
-		
-		$result = App::import('Helper', 'TestPlugin.TestPluginApp');
-		$this->assertTrue($result);
-		$this->assertTrue(class_exists('TestPluginAppHelper'));
-
-		$result = App::import('Datasource', 'TestPlugin.TestSource');
-		$this->assertTrue($result);
-		$this->assertTrue(class_exists('TestSource'));
-		
-		App::build();
-	}
-
-/**
- * test that building helper paths actually works.
- *
- * @return void
- * @link http://cakephp.lighthouseapp.com/projects/42648/tickets/410
- */
-	function testImportingHelpersFromAlternatePaths() {
-		App::build();
-		$this->assertFalse(class_exists('BananaHelper'), 'BananaHelper exists, cannot test importing it.');
-		App::import('Helper', 'Banana');
-		$this->assertFalse(class_exists('BananaHelper'), 'BananaHelper was not found because the path does not exist.');
-
-		App::build(array(
-			'helpers' => array(TEST_CAKE_CORE_INCLUDE_PATH . 'tests' . DS . 'test_app' . DS . 'views' . DS . 'helpers' . DS)
-		));
-		App::build(array('vendors' => array(TEST_CAKE_CORE_INCLUDE_PATH)));
-		$this->assertFalse(class_exists('BananaHelper'), 'BananaHelper exists, cannot test importing it.');
-		App::import('Helper', 'Banana');
-		$this->assertTrue(class_exists('BananaHelper'), 'BananaHelper was not loaded.');
 
 		App::build();
 	}
@@ -831,3 +663,4 @@ class AppImportTest extends CakeTestCase {
 		$this->assertEqual($text, 'This is the welcome.php file in test_plugin/vendors directory');
 	}
 }
+?>

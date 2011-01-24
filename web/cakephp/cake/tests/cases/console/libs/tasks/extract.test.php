@@ -1,4 +1,6 @@
 <?php
+/* SVN FILE: $Id$ */
+
 /**
  * ExtractTaskTest file
  *
@@ -6,18 +8,22 @@
  *
  * PHP versions 4 and 5
  *
- * CakePHP :  Rapid Development Framework (http://cakephp.org)
- * Copyright 2006-2010, Cake Software Foundation, Inc.
+ * CakePHP :  Rapid Development Framework (http://www.cakephp.org)
+ * Copyright 2006-2008, Cake Software Foundation, Inc.
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2006-2010, Cake Software Foundation, Inc.
- * @link          http://cakephp.org CakePHP Project
+ * @filesource
+ * @copyright     Copyright 2006-2008, Cake Software Foundation, Inc.
+ * @link          http://www.cakefoundation.org/projects/info/cakephp CakePHP Project
  * @package       cake
  * @subpackage    cake.tests.cases.console.libs.tasks
  * @since         CakePHP v 1.2.0.7726
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @version       $Revision$
+ * @modifiedby    $LastChangedBy$
+ * @lastmodified  $Date$
+ * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 App::import('Core', 'Folder');
 App::import('Shell', 'Shell', false);
@@ -33,13 +39,14 @@ if (!class_exists('ShellDispatcher')) {
 	ob_end_clean();
 }
 
-require_once CAKE . 'console' .  DS . 'libs' . DS . 'tasks' . DS . 'extract.php';
-
+if (!class_exists('ExtractTask')) {
+	require CAKE . 'console' .  DS . 'libs' . DS . 'tasks' . DS . 'extract.php';
+}
 
 Mock::generatePartial(
-	'ShellDispatcher', 'TestExtractTaskMockShellDispatcher',
-	array('getInput', 'stdout', 'stderr', '_stop', '_initEnvironment')
-);
+				'ShellDispatcher', 'TestExtractTaskMockShellDispatcher',
+				array('getInput', 'stdout', 'stderr', '_stop', '_initEnvironment')
+				);
 
 /**
  * ExtractTaskTest class
@@ -77,12 +84,15 @@ class ExtractTaskTest extends CakeTestCase {
  * @access public
  */
 	function testExecute() {
-		$path = TMP . 'tests' . DS . 'extract_task_test';
-		new Folder($path . DS . 'locale', true);
+		$path = TMP . 'extract_task_test';
+		$folder1 = $path . DS . 'locale';
+
+		new Folder($path, true);
+		new Folder($folder1, true);
 
 		$this->Task->interactive = false;
 
-		$this->Task->params['paths'] = TEST_CAKE_CORE_INCLUDE_PATH . 'tests' . DS . 'test_app' . DS . 'views' . DS . 'pages';
+		$this->Task->params['path'] = TEST_CAKE_CORE_INCLUDE_PATH . 'tests' . DS . 'test_app' . DS . 'views' . DS . 'pages';
 		$this->Task->params['output'] = $path . DS;
 		$this->Task->Dispatch->expectNever('stderr');
 		$this->Task->Dispatch->expectNever('_stop');
@@ -97,7 +107,6 @@ class ExtractTaskTest extends CakeTestCase {
 		$pattern = '/"Plural-Forms\: nplurals\=INTEGER; plural\=EXPRESSION;/';
 		$this->assertPattern($pattern, $result);
 
-		// home.ctp
 		$pattern = '/msgid "Your tmp directory is writable."\nmsgstr ""\n/';
 		$this->assertPattern($pattern, $result);
 		$pattern = '/msgid "Your tmp directory is NOT writable."\nmsgstr ""\n/';
@@ -125,63 +134,8 @@ class ExtractTaskTest extends CakeTestCase {
 		$pattern .= 'edit: %s.*You can also add some CSS styles for your pages at: %s"\nmsgstr ""/s';
 		$this->assertPattern($pattern, $result);
 
-		// extract.ctp
-		$pattern = '/\#: (\\\\|\/)extract\.ctp:6\n';
-		$pattern .= 'msgid "You have %d new message."\nmsgid_plural "You have %d new messages."/';
-		$this->assertPattern($pattern, $result);
-
-		$pattern = '/\#: (\\\\|\/)extract\.ctp:7\n';
-		$pattern .= 'msgid "You deleted %d message."\nmsgid_plural "You deleted %d messages."/';
-		$this->assertPattern($pattern, $result);
-
-		$pattern = '/\#: (\\\\|\/)extract\.ctp:14\n';
-		$pattern .= '\#: (\\\\|\/)home\.ctp:74\n';
-		$pattern .= 'msgid "Editing this Page"\nmsgstr ""/';
-		$this->assertPattern($pattern, $result);
-
-		// extract.ctp - reading the domain.pot
-		$result = file_get_contents($path . DS . 'domain.pot');
-
-		$pattern = '/msgid "You have %d new message."\nmsgid_plural "You have %d new messages."/';
-		$this->assertNoPattern($pattern, $result);
-		$pattern = '/msgid "You deleted %d message."\nmsgid_plural "You deleted %d messages."/';
-		$this->assertNoPattern($pattern, $result);
-
-		$pattern = '/msgid "You have %d new message \(domain\)."\nmsgid_plural "You have %d new messages \(domain\)."/';
-		$this->assertPattern($pattern, $result);
-		$pattern = '/msgid "You deleted %d message \(domain\)."\nmsgid_plural "You deleted %d messages \(domain\)."/';
-		$this->assertPattern($pattern, $result);
-
 		$Folder = new Folder($path);
 		$Folder->delete();
 	}
-	function getTests() {
-		return array('start', 'startCase', 'testExtractMultiplePaths', 'endCase', 'end');
-	}
-
-/**
- * test extract can read more than one path.
- *
- * @return void
- */
-	function testExtractMultiplePaths() {
-		$path = TMP . 'tests' . DS . 'extract_task_test';
-		new Folder($path . DS . 'locale', true);
-
-		$this->Task->interactive = false;
-
-		$this->Task->params['paths'] = 
-			TEST_CAKE_CORE_INCLUDE_PATH . 'tests' . DS . 'test_app' . DS . 'views' . DS . 'pages,' .
-			TEST_CAKE_CORE_INCLUDE_PATH . 'tests' . DS . 'test_app' . DS . 'views' . DS . 'posts';
-	
-		$this->Task->params['output'] = $path . DS;
-		$this->Task->Dispatch->expectNever('stderr');
-		$this->Task->Dispatch->expectNever('_stop');
-		$this->Task->execute();
-
-		$result = file_get_contents($path . DS . 'default.pot');
-
-		$pattern = '/msgid "Add User"/';
-		$this->assertPattern($pattern, $result);
-	}
 }
+?>

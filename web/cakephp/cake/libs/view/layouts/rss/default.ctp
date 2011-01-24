@@ -1,5 +1,5 @@
 <?php
-echo $this->Rss->header();
+echo $rss->header();
 
 if (!isset($channel)) {
 	$channel = array();
@@ -8,8 +8,8 @@ if (!isset($channel['title'])) {
 	$channel['title'] = $title_for_layout;
 }
 
-echo $this->Rss->document(
-	$this->Rss->channel(
+echo $rss->document(
+	$rss->channel(
 		array(), $channel, $content_for_layout
 	)
 );

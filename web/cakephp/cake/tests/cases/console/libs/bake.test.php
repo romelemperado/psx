@@ -6,13 +6,13 @@
  * PHP versions 4 and 5
  *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * Copyright 2005-2009, Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright 2005-2009, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link          http://cakephp.org
  * @package       cake
  * @subpackage    cake.tests.cases.console.libs.tasks
  * @since         CakePHP(tm) v 1.3
@@ -61,16 +61,14 @@ class BakeShellTestCase extends CakeTestCase {
  * fixtures
  *
  * @var array
- * @access public
- */
+ **/
 	var $fixtures = array('core.user');
 
 /**
  * start test
  *
  * @return void
- * @access public
- */
+ **/
 	function startTest() {
 		$this->Dispatch =& new BakeShellMockShellDispatcher();
 		$this->Shell =& new MockBakeShell();
@@ -82,8 +80,7 @@ class BakeShellTestCase extends CakeTestCase {
  * endTest method
  *
  * @return void
- * @access public
- */
+ **/
 	function endTest() {
 		unset($this->Dispatch, $this->Shell);
 	}
@@ -92,14 +89,8 @@ class BakeShellTestCase extends CakeTestCase {
  * test bake all
  *
  * @return void
- * @access public
- */
+ **/
 	function testAllWithModelName() {
-		App::import('Model', 'User');
-		$userExists = class_exists('User');
-		if ($this->skipIf($userExists, 'User class exists, cannot test `bake all [param]`. %s')) {
-			return;
-		}
 		$this->Shell->Model =& new BakeShellMockModelTask();
 		$this->Shell->Controller =& new BakeShellMockControllerTask();
 		$this->Shell->View =& new BakeShellMockModelTask();

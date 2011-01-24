@@ -2,16 +2,17 @@
 /**
  * String handling methods.
  *
+ *
  * PHP versions 4 and 5
  *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * Copyright 2005-2009, Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright 2005-2009, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link          http://cakephp.org
  * @package       cake
  * @subpackage    cake.cake.libs
  * @since         CakePHP(tm) v 1.2.0.5551
@@ -25,7 +26,23 @@
  * @package       cake
  * @subpackage    cake.cake.libs
  */
-class String {
+class String extends Object {
+
+/**
+ * Gets a reference to the String object instance
+ *
+ * @return object String instance
+ * @access public
+ * @static
+ */
+	function &getInstance() {
+		static $instance = array();
+
+		if (!$instance) {
+			$instance[0] =& new String();
+		}
+		return $instance[0];
+	}
 
 /**
  * Generate a random UUID
@@ -107,10 +124,8 @@ class String {
  * $leftBound and $rightBound
  *
  * @param string $data The data to tokenize
- * @param string $separator The token to split the data on.
- * @param string $leftBound The left boundary to ignore separators in.
- * @param string $rightBound The right boundary to ignore separators in.
- * @return array Array of tokens in $data.
+ * @param string $separator The token to split the data on
+ * @return array
  * @access public
  * @static
  */
@@ -185,21 +200,20 @@ class String {
 /**
  * Replaces variable placeholders inside a $str with any given $data. Each key in the $data array
  * corresponds to a variable placeholder name in $str.
- * Example: `String::insert(':name is :age years old.', array('name' => 'Bob', '65'));`
+ * Example: String::insert(':name is :age years old.', array('name' => 'Bob', '65'));
  * Returns: Bob is 65 years old.
  *
  * Available $options are:
- *
- * - before: The character or string in front of the name of the variable placeholder (Defaults to `:`)
- * - after: The character or string after the name of the variable placeholder (Defaults to null)
- * - escape: The character or string used to escape the before character / string (Defaults to `\`)
- * - format: A regex to use for matching variable placeholders. Default is: `/(?<!\\)\:%s/`
- *   (Overwrites before, after, breaks escape / clean)
- * - clean: A boolean or array with instructions for String::cleanInsert
+ * 	before: The character or string in front of the name of the variable placeholder (Defaults to ':')
+ * 	after: The character or string after the name of the variable placeholder (Defaults to null)
+ * 	escape: The character or string used to escape the before character / string (Defaults to '\')
+ * 	format: A regex to use for matching variable placeholders. Default is: '/(?<!\\)\:%s/'
+ *         (Overwrites before, after, breaks escape / clean)
+ * 	clean: A boolean or array with instructions for String::cleanInsert
  *
  * @param string $str A string containing variable placeholders
  * @param string $data A key => val array where each key stands for a placeholder variable name
- *     to be replaced with val
+ *        to be replaced with val
  * @param string $options An array of options, see description above
  * @return string
  * @access public
@@ -211,10 +225,6 @@ class String {
 		);
 		$options += $defaults;
 		$format = $options['format'];
-		$data = (array)$data;
-		if (empty($data)) {
-			return ($options['clean']) ? String::cleanInsert($str, $options) : $str;
-		}
 
 		if (!isset($format)) {
 			$format = sprintf(
@@ -224,54 +234,56 @@ class String {
 				str_replace('%', '%%', preg_quote($options['after'], '/'))
 			);
 		}
+		if (!is_array($data)) {
+			$data = array($data);
+		}
 
-		if (strpos($str, '?') !== false && is_numeric(key($data))) {
+		if (array_keys($data) === array_keys(array_values($data))) {
 			$offset = 0;
 			while (($pos = strpos($str, '?', $offset)) !== false) {
 				$val = array_shift($data);
 				$offset = $pos + strlen($val);
 				$str = substr_replace($str, $val, $pos, 1);
 			}
-			return ($options['clean']) ? String::cleanInsert($str, $options) : $str;
 		} else {
 			asort($data);
 
-			$hashKeys = array();
-			foreach ($data as $key => $value) {
-				$hashKeys[] = crc32($key);
-			}
-
+			$hashKeys = array_map('md5', array_keys($data));
 			$tempData = array_combine(array_keys($data), array_values($hashKeys));
-			krsort($tempData);
 			foreach ($tempData as $key => $hashVal) {
 				$key = sprintf($format, preg_quote($key, '/'));
 				$str = preg_replace($key, $hashVal, $str);
 			}
 			$dataReplacements = array_combine($hashKeys, array_values($data));
-			foreach ($dataReplacements as $tmpHash => $tmpValue) {
-				$tmpValue = (is_array($tmpValue)) ? '' : $tmpValue;
-				$str = str_replace($tmpHash, $tmpValue, $str);
+			foreach ($dataReplacements as $tmpHash => $data) {
+				if (is_array($data)) {
+					$data = '';
+				}
+				$str = str_replace($tmpHash, $data, $str);
 			}
 		}
 
 		if (!isset($options['format']) && isset($options['before'])) {
 			$str = str_replace($options['escape'].$options['before'], $options['before'], $str);
 		}
-		return ($options['clean']) ? String::cleanInsert($str, $options) : $str;
+		if (!$options['clean']) {
+			return $str;
+		}
+		return String::cleanInsert($str, $options);
 	}
 
 /**
- * Cleans up a String::insert() formated string with given $options depending on the 'clean' key in
+ * Cleans up a Set::insert formated string with given $options depending on the 'clean' key in
  * $options. The default method used is text but html is also available. The goal of this function
  * is to replace all whitespace and uneeded markup around placeholders that did not get replaced
- * by String::insert().
+ * by Set::insert.
  *
  * @param string $str
  * @param string $options
  * @return string
  * @access public
  * @static
- * @see String::insert()
+ * @see Set::insert()
  */
 	function cleanInsert($str, $options) {
 		$clean = $options['clean'];
@@ -327,3 +339,4 @@ class String {
 		return $str;
 	}
 }
+?>

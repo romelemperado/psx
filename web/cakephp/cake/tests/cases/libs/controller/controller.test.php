@@ -2,16 +2,18 @@
 /**
  * ControllerTest file
  *
+ * Long description for file
+ *
  * PHP versions 4 and 5
  *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * Copyright 2005-2009, Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP Project
+ * @copyright     Copyright 2005-2009, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link          http://cakephp.org
  * @package       cake
  * @subpackage    cake.tests.cases.libs.controller
  * @since         CakePHP(tm) v 1.2.0.5436
@@ -250,7 +252,7 @@ class ControllerPaginateModel extends CakeTestModel {
  *
  * @return void
  * @access public
- */
+ **/
 	function paginate($conditions, $fields, $order, $limit, $page, $recursive, $extra) {
 		$this->extra = $extra;
 	}
@@ -318,7 +320,7 @@ class TestController extends AppController {
  * @var array
  * @access public
  */
-	var $helpers = array('Session', 'Xml');
+	var $helpers = array('Xml');
 
 /**
  * components property
@@ -366,41 +368,6 @@ class TestComponent extends Object {
  */
 	function beforeRedirect() {
 	}
-/**
- * initialize method
- *
- * @access public
- * @return void
- */
-	function initialize(&$controller) {
-	}
-
-/**
- * startup method
- *
- * @access public
- * @return void
- */
-	function startup(&$controller) {
-	}
-/**
- * shutdown method
- *
- * @access public
- * @return void
- */
-	function shutdown(&$controller) {
-	}
-/**
- * beforeRender callback
- *
- * @return void
- */
-	function beforeRender(&$controller) {
-		if ($this->viewclass) {
-			$controller->view = $this->viewclass;
-		}
-	}
 }
 
 /**
@@ -417,6 +384,7 @@ class AnotherTestController extends AppController {
  * @access public
  */
 	var $name = 'AnotherTest';
+
 /**
  * uses property
  *
@@ -450,26 +418,6 @@ class ControllerTest extends CakeTestCase {
  */
 	function endTest() {
 		App::build();
-	}
-
-/**
- * testLoadModel method
- *
- * @access public
- * @return void
- */
-	function testLoadModel() {
-		$Controller =& new Controller();
-
-		$this->assertFalse(isset($Controller->ControllerPost));
-
-		$result = $Controller->loadModel('ControllerPost');
-		$this->assertTrue($result);
-		$this->assertTrue(is_a($Controller->ControllerPost, 'ControllerPost'));
-		$this->assertTrue(in_array('ControllerPost', $Controller->modelNames));
-
-		ClassRegistry::flush();
-		unset($Controller);
 	}
 
 /**
@@ -609,30 +557,6 @@ class ControllerTest extends CakeTestCase {
 		$Controller->paginate('ControllerPost');
 		$this->assertIdentical($Controller->params['paging']['ControllerPost']['page'], 1, 'XSS exploit opened %s');
 		$this->assertIdentical($Controller->params['paging']['ControllerPost']['options']['page'], 1, 'XSS exploit opened %s');
-
-		$Controller->passedArgs = array();
-		$Controller->paginate = array('limit' => 0);
-		$Controller->paginate('ControllerPost');
-		$this->assertIdentical($Controller->params['paging']['ControllerPost']['page'], 1);
-		$this->assertIdentical($Controller->params['paging']['ControllerPost']['pageCount'], 3);
-		$this->assertIdentical($Controller->params['paging']['ControllerPost']['prevPage'], false);
-		$this->assertIdentical($Controller->params['paging']['ControllerPost']['nextPage'], true);
-
-		$Controller->passedArgs = array();
-		$Controller->paginate = array('limit' => 'garbage!');
-		$Controller->paginate('ControllerPost');
-		$this->assertIdentical($Controller->params['paging']['ControllerPost']['page'], 1);
-		$this->assertIdentical($Controller->params['paging']['ControllerPost']['pageCount'], 3);
-		$this->assertIdentical($Controller->params['paging']['ControllerPost']['prevPage'], false);
-		$this->assertIdentical($Controller->params['paging']['ControllerPost']['nextPage'], true);
-
-		$Controller->passedArgs = array();
-		$Controller->paginate = array('limit' => '-1');
-		$Controller->paginate('ControllerPost');
-		$this->assertIdentical($Controller->params['paging']['ControllerPost']['page'], 1);
-		$this->assertIdentical($Controller->params['paging']['ControllerPost']['pageCount'], 3);
-		$this->assertIdentical($Controller->params['paging']['ControllerPost']['prevPage'], false);
-		$this->assertIdentical($Controller->params['paging']['ControllerPost']['nextPage'], true);
 	}
 
 /**
@@ -696,44 +620,6 @@ class ControllerTest extends CakeTestCase {
 	}
 
 /**
- * testPaginateFieldsDouble method
- *
- * @return void
- * @access public
- */
-	function testPaginateFieldsDouble(){
-		$Controller =& new Controller();
-		$Controller->uses = array('ControllerPost');
-		$Controller->params['url'] = array();
-		$Controller->constructClasses();
-
-		$Controller->paginate = array(
-			'fields' => array(
-				'ControllerPost.id',
-				'radians(180.0) as floatvalue'
-			),
-			'order' => array('ControllerPost.created'=>'DESC'),
-			'limit' => 1,
-			'page' => 1,
-			'recursive' => -1
-		);
-		$conditions = array();
-		$result = $Controller->paginate('ControllerPost',$conditions);
-		$expected = array(
-			array(
-				'ControllerPost' => array(
-					'id' => 3,
-				),
-				0 => array(
-					'floatvalue' => '3.14159265358979',
-				),
-			),
-		);
-		$this->assertEqual($result, $expected);
-	}
-
-
-/**
  * testPaginatePassedArgs method
  *
  * @return void
@@ -771,7 +657,7 @@ class ControllerTest extends CakeTestCase {
  * Test that special paginate types are called and that the type param doesn't leak out into defaults or options.
  *
  * @return void
- */
+ **/
 	function testPaginateSpecialType() {
 		$Controller =& new Controller();
 		$Controller->uses = array('ControllerPost', 'ControllerComment');
@@ -807,32 +693,6 @@ class ControllerTest extends CakeTestCase {
 	}
 
 /**
- * test paginate() and virtualField interactions
- *
- * @return void
- */
-	function testPaginateOrderVirtualField() {
-		$Controller =& new Controller();
-		$Controller->uses = array('ControllerPost', 'ControllerComment');
-		$Controller->params['url'] = array();
-		$Controller->constructClasses();
-		$Controller->ControllerPost->virtualFields = array(
-			'offset_test' => 'ControllerPost.id + 1'
-		);
-
-		$Controller->paginate = array(
-			'fields' => array('id', 'title', 'offset_test'),
-			'order' => array('offset_test' => 'DESC')
-		);
-		$result = $Controller->paginate('ControllerPost');
-		$this->assertEqual(Set::extract($result, '{n}.ControllerPost.offset_test'), array(4, 3, 2));
-
-		$Controller->passedArgs = array('sort' => 'offset_test', 'direction' => 'asc');
-		$result = $Controller->paginate('ControllerPost');
-		$this->assertEqual(Set::extract($result, '{n}.ControllerPost.offset_test'), array(2, 3, 4));
-	}
-
-/**
  * testFlash method
  *
  * @access public
@@ -861,13 +721,6 @@ class ControllerTest extends CakeTestCase {
 		$result = str_replace(array("\t", "\r\n", "\n"), "", $result);
 		$expected =  str_replace(array("\t", "\r\n", "\n"), "", $expected);
 		$this->assertEqual($result, $expected);
-
-		App::build(array('views' => array(TEST_CAKE_CORE_INCLUDE_PATH . 'tests' . DS . 'test_app' . DS . 'views'. DS)));
-		$Controller =& new Controller();
-		$Controller->flash('this should work', '/flash', 1, 'ajax2');
-		$result = $Controller->output;
-		$this->assertPattern('/Ajax!/', $result);
-		App::build();
 	}
 
 /**
@@ -896,20 +749,12 @@ class ControllerTest extends CakeTestCase {
 		$this->assertTrue(array_key_exists('ModelName', $Controller->viewVars));
 
 		$Controller->set('title', 'someTitle');
-		$this->assertIdentical($Controller->viewVars['title'], 'someTitle');
-		$this->assertTrue(empty($Controller->pageTitle));
+		$this->assertIdentical($Controller->pageTitle, 'someTitle');
 
 		$Controller->viewVars = array();
 		$expected = array('ModelName' => 'name', 'ModelName2' => 'name2');
 		$Controller->set(array('ModelName', 'ModelName2'), array('name', 'name2'));
 		$this->assertIdentical($Controller->viewVars, $expected);
-
-		$Controller->viewVars = array();
-		$Controller->set(array(3 => 'three', 4 => 'four'));
-		$Controller->set(array(1 => 'one', 2 => 'two'));
-		$expected = array(3 => 'three', 4 => 'four', 1 => 'one', 2 => 'two');
-		$this->assertEqual($Controller->viewVars, $expected);
-		
 	}
 
 /**
@@ -919,9 +764,7 @@ class ControllerTest extends CakeTestCase {
  * @return void
  */
 	function testRender() {
-		App::build(array(
-			'views' => array(TEST_CAKE_CORE_INCLUDE_PATH . 'tests' . DS . 'test_app' . DS . 'views'. DS)
-		), true);
+		App::build(array('views' => array(TEST_CAKE_CORE_INCLUDE_PATH . 'tests' . DS . 'test_app' . DS . 'views'. DS)));
 
 		$Controller =& new Controller();
 		$Controller->viewPath = 'posts';
@@ -946,32 +789,6 @@ class ControllerTest extends CakeTestCase {
 
 		$Controller->ControllerComment->validationErrors = array();
 		ClassRegistry::flush();
-		App::build();
-	}
-
-/**
- * test that a component beforeRender can change the controller view class.
- *
- * @return void
- */
-	function testComponentBeforeRenderChangingViewClass() {
-		$core = App::core('views');
-		App::build(array(
-			'views' => array(
-				TEST_CAKE_CORE_INCLUDE_PATH . 'tests' . DS . 'test_app' . DS . 'views'. DS,
-				$core[0]
-			)
-		), true);
-		$Controller =& new Controller();
-		$Controller->uses = array();
-		$Controller->components = array('Test');
-		$Controller->constructClasses();
-		$Controller->Test->viewclass = 'Theme';
-		$Controller->viewPath = 'posts';
-		$Controller->theme = 'test_theme';
-		$result = $Controller->render('index');
-		$this->assertPattern('/default test_theme layout/', $result);
-		App::build();
 	}
 
 /**
@@ -1185,7 +1002,7 @@ class ControllerTest extends CakeTestCase {
  *
  * @access public
  * @return void
- */
+ **/
 	function testChildComponentOptionsSupercedeParents() {
 		if ($this->skipIf(defined('APP_CONTROLLER_EXISTS'), '%s Need a non-existent AppController')) {
 			return;
@@ -1202,14 +1019,14 @@ class ControllerTest extends CakeTestCase {
  * AppController when you make an instance of Controller
  *
  * @return void
- */
+ **/
 	function testMergeVarsNotGreedy() {
 		$Controller =& new Controller();
 		$Controller->components = array();
 		$Controller->uses = array();
 		$Controller->constructClasses();
 
-		$this->assertFalse(isset($Controller->Session));
+		$this->assertTrue(isset($Controller->Session));
 	}
 
 /**
@@ -1308,29 +1125,12 @@ class ControllerTest extends CakeTestCase {
 
 		$TestController->ControllerComment->invalidate('some_field', 'error_message');
 		$TestController->ControllerComment->invalidate('some_field2', 'error_message2');
-		$comment =& new ControllerComment();
+		$comment = new ControllerComment;
 		$comment->set('someVar', 'data');
 		$result = $TestController->validateErrors($comment);
 		$expected = array('some_field' => 'error_message', 'some_field2' => 'error_message2');
 		$this->assertIdentical($result, $expected);
 		$this->assertEqual($TestController->validate($comment), 2);
-	}
-
-/**
- * test that validateErrors works with any old model.
- *
- * @return void
- */
-	function testValidateErrorsOnArbitraryModels() {
-		$TestController =& new TestController();
-
-		$Post = new ControllerPost();
-		$Post->validate = array('title' => 'notEmpty');
-		$Post->set('title', '');
-		$result = $TestController->validateErrors($Post);
-
-		$expected = array('title' => 'This field cannot be left blank');
-		$this->assertEqual($result, $expected);
 	}
 
 /**
@@ -1418,77 +1218,5 @@ class ControllerTest extends CakeTestCase {
 		$this->assertEqual($Controller->RequestHandler->prefers(), 'rss');
 		unset($Controller);
 	}
-
-/**
- * testControllerHttpCodes method
- *
- * @access public
- * @return void
- */
-	function testControllerHttpCodes() {
-		$Controller =& new Controller();
-		$result = $Controller->httpCodes();
-		$this->assertEqual(count($result), 39);
-
-		$result = $Controller->httpCodes(100);
-		$expected = array(100 => 'Continue');
-		$this->assertEqual($result, $expected);
-
-		$codes = array(
-			1337 => 'Undefined Unicorn',
-			1729 => 'Hardy-Ramanujan Located'
-		);
-
-		$result = $Controller->httpCodes($codes);
-		$this->assertTrue($result);
-		$this->assertEqual(count($Controller->httpCodes()), 41);
-
-		$result = $Controller->httpCodes(1337);
-		$expected = array(1337 => 'Undefined Unicorn');
-		$this->assertEqual($result, $expected);
-
-		$codes = array(404 => 'Sorry Bro');
-		$result = $Controller->httpCodes($codes);
-		$this->assertTrue($result);
-		$this->assertEqual(count($Controller->httpCodes()), 41);
-
-		$result = $Controller->httpCodes(404);
-		$expected = array(404 => 'Sorry Bro');
-		$this->assertEqual($result, $expected);
-	}
-
-/**
- * Tests that the startup process calls the correct functions
- *
- * @access public
- * @return void
- */
-	function testStartupProcess() {
-		Mock::generatePartial('AnotherTestController','MockedController', array('beforeFilter', 'afterFilter'));
-		Mock::generate('TestComponent', 'MockTestComponent', array('startup', 'initialize'));
-		$MockedController =& new MockedController();
-		$MockedController->components = array('MockTest');
-		$MockedController->Component =& new Component();
-		$MockedController->Component->init($MockedController);
-		$MockedController->expectCallCount('beforeFilter', 1);
-		$MockedController->MockTest->expectCallCount('initialize', 1);
-		$MockedController->MockTest->expectCallCount('startup', 1);
-		$MockedController->startupProcess();
-	}
-/**
- * Tests that the shutdown process calls the correct functions
- *
- * @access public
- * @return void
- */
-	function testShutdownProcess() {
-		Mock::generate('TestComponent', 'MockTestComponent', array('shutdown'));
-		$MockedController =& new MockedController();
-		$MockedController->components = array('MockTest');
-		$MockedController->Component =& new Component();
-		$MockedController->Component->init($MockedController);
-		$MockedController->expectCallCount('afterFilter', 1);
-		$MockedController->MockTest->expectCallCount('shutdown', 1);
-		$MockedController->shutdownProcess();
-	}
 }
+?>

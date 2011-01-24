@@ -1,21 +1,27 @@
 <?php
+/* SVN FILE: $Id$ */
+
 /**
  * Javascript Helper class file.
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) :  Rapid Development Framework (http://www.cakephp.org)
+ * Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @filesource
+ * @copyright     Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * @link          http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
  * @package       cake
  * @subpackage    cake.cake.libs.view.helpers
  * @since         CakePHP(tm) v 0.10.0.1076
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @version       $Revision$
+ * @modifiedby    $LastChangedBy$
+ * @lastmodified  $Date$
+ * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 
 /**
@@ -25,7 +31,6 @@
  *
  * @package       cake
  * @subpackage    cake.cake.libs.view.helpers
- * @link http://book.cakephp.org/view/1450/Javascript
  */
 class JavascriptHelper extends AppHelper {
 
@@ -261,20 +266,26 @@ class JavascriptHelper extends AppHelper {
 				$url = JS_URL . $url;
 			}
 			if (strpos($url, '?') === false) {
-				if (substr($url, -3) !== '.js') {
+				if (strpos($url, '.js') === false) {
 					$url .= '.js';
 				}
 			}
-			$url = $this->assetTimestamp($this->webroot($url));
+
+			$url = $this->webroot($url);
+			$timestampEnabled = (
+				(Configure::read('Asset.timestamp') === true && Configure::read() > 0) ||
+				Configure::read('Asset.timestamp') === 'force'
+			);
+
+			if (strpos($url, '?') === false && $timestampEnabled) {
+				$url .= '?' . @filemtime(WWW_ROOT . str_replace('/', DS, $url));
+			}
 
 			if (Configure::read('Asset.filter.js')) {
-				$pos = strpos($url, JS_URL);
-				if ($pos !== false) {
-					$url = substr($url, 0, $pos) . 'cjs/' . substr($url, $pos + strlen(JS_URL));
-				}
+				$url = str_replace(JS_URL, 'cjs/', $url);
 			}
 		}
-		$out = sprintf($this->tags['javascriptlink'], $url);
+		$out = $this->output(sprintf($this->tags['javascriptlink'], $url));
 
 		if ($inline) {
 			return $out;
@@ -320,7 +331,7 @@ class JavascriptHelper extends AppHelper {
  * Encode a string into JSON.  Converts and escapes necessary characters.
  *
  * @return void
- */
+ **/
 	function _utf8ToHex($string) {
 		$length = strlen($string);
 		$return = '';
@@ -594,13 +605,18 @@ class JavascriptHelper extends AppHelper {
  * - postfix - Appends the string to the returned data. Default is ''
  * - stringKeys - A list of array keys to be treated as a string.
  * - quoteKeys - If false treats $stringKeys as a list of keys **not** to be quoted. Default is true.
- * - q - The type of quote to use. Default is '"'.  This option only affects the keys, not the values.
+ * - q - The type of quote to use. Default is "'"
  *
  * @param array $data Data to be converted
  * @param array $options Set of options: block, prefix, postfix, stringKeys, quoteKeys, q
+ * @param string $prefix DEPRECATED, use $options['prefix'] instead. Prepends the string to the returned data
+ * @param string $postfix DEPRECATED, use $options['postfix'] instead. Appends the string to the returned data
+ * @param array $stringKeys DEPRECATED, use $options['stringKeys'] instead. A list of array keys to be treated as a string
+ * @param boolean $quoteKeys DEPRECATED, use $options['quoteKeys'] instead. If false, treats $stringKey as a list of keys *not* to be quoted
+ * @param string $q DEPRECATED, use $options['q'] instead. The type of quote to use
  * @return string A JSON code block
  */
-	function object($data = array(), $options = array()) {
+	function object($data = array(), $options = array(), $prefix = null, $postfix = null, $stringKeys = null, $quoteKeys = null, $q = null) {
 		if (!empty($options) && !is_array($options)) {
 			$options = array('block' => $options);
 		} else if (empty($options)) {
@@ -640,10 +656,7 @@ class JavascriptHelper extends AppHelper {
 
 			foreach ($data as $key => $val) {
 				if (is_array($val) || is_object($val)) {
-					$val = $this->object(
-						$val,
-						array_merge($options, array('block' => false, 'prefix' => '', 'postfix' => ''))
-					);
+					$val = $this->object($val, array_merge($options, array('block' => false)));
 				} else {
 					$quoteStrings = (
 						!count($options['stringKeys']) ||
@@ -659,9 +672,9 @@ class JavascriptHelper extends AppHelper {
 			}
 
 			if (!$numeric) {
-				$rt = '{' . implode(',', $out) . '}';
+				$rt = '{' . join(',', $out) . '}';
 			} else {
-				$rt = '[' . implode(',', $out) . ']';
+				$rt = '[' . join(',', $out) . ']';
 			}
 		}
 		$rt = $options['prefix'] . $rt . $options['postfix'];
@@ -689,7 +702,7 @@ class JavascriptHelper extends AppHelper {
 				$val = 'null';
 			break;
 			case (is_bool($val)):
-				$val = !empty($val) ? 'true' : 'false';
+				$val = ife($val, 'true', 'false');
 			break;
 			case (is_int($val)):
 				$val = $val;
@@ -719,3 +732,5 @@ class JavascriptHelper extends AppHelper {
 		echo $this->writeEvents(true);
 	}
 }
+
+?>

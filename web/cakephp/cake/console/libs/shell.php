@@ -1,21 +1,29 @@
 <?php
+/* SVN FILE: $Id$ */
+
 /**
  * Base class for Shells
  *
+ * Long description for file
+ *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) :  Rapid Development Framework (http://www.cakephp.org)
+ * Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @filesource
+ * @copyright     Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * @link          http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
  * @package       cake
  * @subpackage    cake.cake.console.libs
  * @since         CakePHP(tm) v 1.2.0.5012
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @version       $Revision$
+ * @modifiedby    $LastChangedBy$
+ * @lastmodified  $Date$
+ * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 
 /**
@@ -137,7 +145,6 @@ class Shell extends Object {
  */
 	function __construct(&$dispatch) {
 		$vars = array('params', 'args', 'shell', 'shellCommand' => 'command');
-
 		foreach ($vars as $key => $var) {
 			if (is_string($key)) {
 				$this->{$var} =& $dispatch->{$key};
@@ -181,7 +188,7 @@ class Shell extends Object {
 	}
 
 /**
- * Starts up the Shell
+ * Starts up the the Shell
  * allows for checking and configuring prior to command or main execution
  * can be overriden in subclasses
  *
@@ -198,9 +205,8 @@ class Shell extends Object {
  */
 	function _welcome() {
 		$this->Dispatch->clear();
-		$this->out();
-		$this->out('Welcome to CakePHP v' . Configure::version() . ' Console');
-		$this->hr();
+		$this->out("\nWelcome to CakePHP v" . Configure::version() . " Console");
+		$this->out("---------------------------------------------------------------");
 		$this->out('App : '. $this->params['app']);
 		$this->out('Path: '. $this->params['working']);
 		$this->hr();
@@ -218,8 +224,8 @@ class Shell extends Object {
 			$this->DbConfig =& new DATABASE_CONFIG();
 			return true;
 		}
-		$this->err('Database config could not be loaded.');
-		$this->out('Run `bake` to create the database configuration.');
+		$this->err('Database config could not be loaded');
+		$this->out('Run \'bake\' to create the database configuration');
 		return false;
 	}
 
@@ -252,7 +258,11 @@ class Shell extends Object {
 			$this->modelClass = $modelClassName;
 
 			foreach ($uses as $modelClass) {
-				list($plugin, $modelClass) = pluginSplit($modelClass, true);
+				$plugin = null;
+				if (strpos($modelClass, '.') !== false) {
+					list($plugin, $modelClass) = explode('.', $modelClass);
+					$plugin = $plugin . '.';
+				}
 				if (PHP5) {
 					$this->{$modelClass} = ClassRegistry::init($plugin . $modelClass);
 				} else {
@@ -286,23 +296,19 @@ class Shell extends Object {
 
 			if (!class_exists($taskClass)) {
 				foreach ($this->Dispatch->shellPaths as $path) {
-					$taskPath = $path . 'tasks' . DS . $task . '.php';
+					$taskPath = $path . 'tasks' . DS . $task.'.php';
 					if (file_exists($taskPath)) {
 						require_once $taskPath;
 						break;
 					}
 				}
 			}
-			$taskClassCheck = $taskClass;
-			if (!PHP5) {
-				$taskClassCheck = strtolower($taskClass);
-			}
-			if (ClassRegistry::isKeySet($taskClassCheck)) {
+			if (ClassRegistry::isKeySet($taskClass)) {
 				$this->taskNames[] = $taskName;
 				if (!PHP5) {
-					$this->{$taskName} =& ClassRegistry::getObject($taskClassCheck);
+					$this->{$taskName} =& ClassRegistry::getObject($taskClass);
 				} else {
-					$this->{$taskName} = ClassRegistry::getObject($taskClassCheck);
+					$this->{$taskName} = ClassRegistry::getObject($taskClass);
 				}
 			} else {
 				$this->taskNames[] = $taskName;
@@ -314,7 +320,7 @@ class Shell extends Object {
 			}
 
 			if (!isset($this->{$taskName})) {
-				$this->err("Task `{$taskName}` could not be loaded");
+				$this->err("Task '" . $taskName . "' could not be loaded");
 				$this->_stop();
 			}
 		}
@@ -357,59 +363,63 @@ class Shell extends Object {
 	}
 
 /**
- * Outputs a single or multiple messages to stdout. If no parameters
- * are passed outputs just a newline.
+ * Outputs a single or multiple messages to stdout.
  *
  * @param mixed $message A string or a an array of strings to output
- * @param integer $newlines Number of newlines to append
- * @return integer Returns the number of bytes returned from writing to stdout.
+ * @param mixed $after Appended to message, if true a newline is used
  * @access public
  */
-	function out($message = null, $newlines = 1) {
+	function out($message, $after = true) {
 		if (is_array($message)) {
 			$message = implode($this->nl(), $message);
 		}
-		return $this->Dispatch->stdout($message . $this->nl($newlines), false);
+		$this->Dispatch->stdout($message . $this->nl($after), false);
 	}
 
 /**
- * Outputs a single or multiple error messages to stderr. If no parameters
- * are passed outputs just a newline.
+ * Outputs a single or multiple error messages to stderr.
  *
  * @param mixed $message A string or a an array of strings to output
- * @param integer $newlines Number of newlines to append
+ * @param mixed $after Appended to message, if true a newline is used
  * @access public
  */
-	function err($message = null, $newlines = 1) {
+	function err($message, $after = true) {
 		if (is_array($message)) {
 			$message = implode($this->nl(), $message);
 		}
-		$this->Dispatch->stderr($message . $this->nl($newlines));
+		$this->Dispatch->stderr($message . $this->nl($after));
 	}
 
 /**
  * Returns a single or multiple linefeeds sequences.
  *
- * @param integer $multiplier Number of times the linefeed sequence should be repeated
+ * @param mixed $format If true returns a linefeed sequence, if false null,
+ *	if a string is given that is returned,
+ *	if an integer is given it is used as a multiplier to return multiple linefeed sequences
  * @access public
  * @return string
  */
-	function nl($multiplier = 1) {
-		return str_repeat("\n", $multiplier);
+	function nl($format = true) {
+		if (is_string($format)) {
+			return $format . "\n";
+		}
+		if (is_int($format)) {
+			return str_repeat("\n", $format);
+		}
+		return $format ? "\n" : null;
 	}
 
 /**
  * Outputs a series of minus characters to the standard output, acts as a visual separator.
  *
- * @param integer $newlines Number of newlines to pre- and append
+ * @param mixed $surround If true, the outputs gets surrounded by newlines.
  * @access public
  */
-	function hr($newlines = 0) {
-		$this->out(null, $newlines);
+	function hr($surround = false) {
+		$this->out(null, $surround);
 		$this->out('---------------------------------------------------------------');
-		$this->out(null, $newlines);
+		$this->out(null, $surround);
 	}
-
 /**
  * Displays a formatted error message
  * and exits the application with status code 1
@@ -439,11 +449,7 @@ class Shell extends Object {
 			$command = $this->command;
 		}
 		if (count($this->args) < $expectedNum) {
-			$message[] = "Got: " . count($this->args);
-			$message[] = "Expected: {$expectedNum}";
-			$message[] = "Please type `cake {$this->shell} help` for help";
-			$message[] = "on usage of the {$this->name} {$command}.";
-			$this->error('Wrong number of parameters', $message);
+			$this->error("Wrong number of parameters: ".count($this->args), "Expected: {$expectedNum}\nPlease type 'cake {$this->shell} help' for help on usage of the {$this->name} {$command}");
 		}
 	}
 
@@ -455,21 +461,16 @@ class Shell extends Object {
  * @return boolean Success
  * @access public
  */
-	function createFile($path, $contents) {
+	function createFile ($path, $contents) {
 		$path = str_replace(DS . DS, DS, $path);
-
-		$this->out();
-		$this->out(sprintf(__("Creating file %s", true), $path));
-
+		$this->out("\n" . sprintf(__("Creating file %s", true), $path));
 		if (is_file($path) && $this->interactive === true) {
-			$prompt = sprintf(__('File `%s` exists, overwrite?', true), $path);
-			$key = $this->in($prompt,  array('y', 'n', 'q'), 'n');
-
+			$key = $this->in(__("File exists, overwrite?", true). " {$path}",  array('y', 'n', 'q'), 'n');
 			if (strtolower($key) == 'q') {
-				$this->out(__('Quitting.', true), 2);
-				$this->_stop();
+				$this->out(__("Quitting.", true) ."\n");
+				exit;
 			} elseif (strtolower($key) != 'y') {
-				$this->out(sprintf(__('Skip `%s`', true), $path), 2);
+				$this->out(__("Skip", true) ." {$path}\n");
 				return false;
 			}
 		}
@@ -480,10 +481,10 @@ class Shell extends Object {
 		if ($File = new File($path, true)) {
 			$data = $File->prepare($contents);
 			$File->write($data);
-			$this->out(sprintf(__('Wrote `%s`', true), $path));
+			$this->out(__("Wrote", true) ." {$path}");
 			return true;
 		} else {
-			$this->err(sprintf(__('Could not write to `%s`.', true), $path), 2);
+			$this->err(__("Error! Could not write to", true)." {$path}.\n");
 			return false;
 		}
 	}
@@ -495,8 +496,7 @@ class Shell extends Object {
  */
 	function help() {
 		if ($this->command != null) {
-			$this->err("Unknown {$this->name} command `{$this->command}`.");
-			$this->err("For usage, try `cake {$this->shell} help`.", 2);
+			$this->err("Unknown {$this->name} command '$this->command'.\nFor usage, try 'cake {$this->shell} help'.\n\n");
 		} else {
 			$this->Dispatch->help();
 		}
@@ -512,13 +512,11 @@ class Shell extends Object {
 		if (App::import('vendor', 'simpletest' . DS . 'simpletest')) {
 			return true;
 		}
-		$prompt = 'SimpleTest is not installed. Do you want to bake unit test files anyway?';
-		$unitTest = $this->in($prompt, array('y','n'), 'y');
+		$unitTest = $this->in('SimpleTest is not installed.  Do you want to bake unit test files anyway?', array('y','n'), 'y');
 		$result = strtolower($unitTest) == 'y' || strtolower($unitTest) == 'yes';
 
 		if ($result) {
-			$this->out();
-			$this->out('You can download SimpleTest from http://simpletest.org');
+			$this->out("\nYou can download SimpleTest from http://simpletest.org", true);
 		}
 		return $result;
 	}
@@ -570,14 +568,14 @@ class Shell extends Object {
 	}
 
 /**
- * Creates the proper underscored model key for associations
+ * Creates the proper singular model key for associations
  *
- * @param string $name Model class name
+ * @param string $name Controller class name
  * @return string Singular model key
  * @access protected
  */
 	function _modelKey($name) {
-		return Inflector::underscore($name) . '_id';
+		return Inflector::underscore(Inflector::singularize($name)).'_id';
 	}
 
 /**
@@ -588,7 +586,8 @@ class Shell extends Object {
  * @access protected
  */
 	function _modelNameFromKey($key) {
-		return Inflector::camelize(str_replace('_id', '', $key));
+		$name = str_replace('_id', '',$key);
+		return Inflector::camelize($name);
 	}
 
 /**
@@ -632,7 +631,7 @@ class Shell extends Object {
  * @access protected
  */
 	function _pluralHumanName($name) {
-		return Inflector::humanize(Inflector::underscore($name));
+		return Inflector::humanize(Inflector::underscore(Inflector::pluralize($name)));
 	}
 
 /**
@@ -640,8 +639,16 @@ class Shell extends Object {
  *
  * @param string $pluginName Name of the plugin you want ie. DebugKit
  * @return string $path path to the correct plugin.
- */
+ **/
 	function _pluginPath($pluginName) {
-		return App::pluginPath($pluginName);
+		$pluginPaths = App::path('plugins');
+		$pluginDirName = Inflector::underscore($pluginName);
+		foreach ($pluginPaths as $path) {
+			if (is_dir($path . $pluginDirName)) {
+				return $path . $pluginDirName . DS ;
+			}
+		}
+		return $pluginPaths[0] . $pluginDirName . DS;
 	}
 }
+?>

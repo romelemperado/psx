@@ -5,13 +5,13 @@
  * PHP versions 4 and 5
  *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * Copyright 2005-2009, Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright 2005-2009, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link          http://cakephp.org
  * @package       cake
  * @subpackage    cake.tests.cases.console.libs.tasks
  * @since         CakePHP(tm) v 1.3
@@ -85,7 +85,7 @@ class DbConfigTaskTest extends CakeTestCase {
 		$this->Task->Dispatch =& $this->Dispatcher;
 		$this->Task->Dispatch->shellPaths = App::path('shells');
 
-		$this->Task->params['working'] = rtrim(APP, DS);
+		$this->Task->params['working'] = rtrim(APP, '/');
 		$this->Task->databaseClassName = 'TEST_DATABASE_CONFIG';
 	}
 
@@ -104,8 +104,7 @@ class DbConfigTaskTest extends CakeTestCase {
  * Test the getConfig method.
  *
  * @return void
- * @access public
- */
+ **/
 	function testGetConfig() {
 		$this->Task->setReturnValueAt(0, 'in', 'otherOne');
 		$result = $this->Task->getConfig();
@@ -116,8 +115,7 @@ class DbConfigTaskTest extends CakeTestCase {
  * test that initialize sets the path up.
  *
  * @return void
- * @access public
- */
+ **/
 	function testInitialize() {
 		$this->assertTrue(empty($this->Task->path));
 		$this->Task->initialize();
@@ -130,8 +128,7 @@ class DbConfigTaskTest extends CakeTestCase {
  * test execute and by extension __interactive
  *
  * @return void
- * @access public
- */
+ **/
 	function testExecuteIntoInteractive() {
 		$this->Task->initialize();
 
@@ -153,3 +150,4 @@ class DbConfigTaskTest extends CakeTestCase {
 		$result = $this->Task->execute();
 	}
 }
+?>
