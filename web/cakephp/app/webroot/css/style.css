@@ -1,0 +1,151 @@
+body {
+    background: #CCCCCC;
+    font-family: 'lucida grande', verdana, helvatica, arial, sans-serif;
+    font-size: 40%;
+    margin: 0;
+}
+
+a{
+    color: #003d4c;
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+a:hover {
+     color: #367889;
+     text-decoration: none;
+}
+
+a img {
+      border: none;
+}
+
+h1,h2, h3, h4 {
+      font-weight: normal;
+      margin-bottom: 0.5em;
+}
+
+h1 {
+    background: #fff;
+    color: #003d4c;
+    font-size: 100%;
+}
+
+h2 {
+      background: #fff;
+      color: #e32;
+      font-family: 'Gill Sans', lucida grande', helvetica, arial, sans-serif;
+      font-size: 190%;
+}
+
+h3 {
+   color: 993;
+   font-family: 'Gill Sans', 'lucida grande', helvetica, arial, sans-serif;
+   font-size: 165%;
+}
+
+h4 {
+   color: #993;
+   font-weight: normal;
+}
+
+ul,li {
+   margin: 0 12px;
+}
+
+.container {
+   bakground-color: #fff000;
+   text-align: center;
+}
+
+#header {
+    padding: 10px 20px;
+}
+
+#header h1 {
+   line-height: 20px;
+   background: #003d4c;
+   color: #fff;
+   padding: 0px 30px;
+}
+
+#header h1 a {
+   color: #fff;
+   background: #003d4c;
+   font-weight: normal;
+   text-decoration: none;
+}
+
+#header h1 a:hover {
+    color: #fff;
+    background: #003d4c;
+    text-decoration: underline;
+}
+
+#content {
+    background: #fff;
+    clear: both;
+    color: #333;
+    padding: 10px 20px 40px 20px;
+    overflow: auto;
+}
+
+#footer {
+   clear: both;
+   padding: 6px 10px;
+   text-align: right;
+}
+
+div.view {
+     float: right;
+     width: 76%;
+     border-left: 1px solid #666;
+     padding: 10px 2%;
+}
+
+div.actions {
+    float: left;
+    width: 16%;
+    padding: 10px 1.5%;
+}
+
+div.actions h3 {
+    padding-top: 0;
+    color: #777;
+}
+
+table {
+     background: #fff;
+     border-right: 0;
+     clear: both;
+     color: #333;
+     margin-bottom: 10px;
+     width: 100%;
+}
+
+th {
+    border: 0;
+    border-bottom: 2px solid #555;
+    text-align: left;
+    padding: 4px;
+}
+
+th a {
+    display: block;
+    padding: 2px 4px;
+    text-decoration: none;
+}
+
+table tr td {
+    background: #fff;
+    padding: 6px;
+    text-align: top;
+    vertical-align: top;
+    border-bottom: 1px solid #ddd;
+}
+
+form {
+   clear: both;
+   margin-bottom: 1em;
+   padding: 16px 20px;
+}
